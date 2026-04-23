@@ -1,0 +1,438 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root {
+  --night-bg:   #0d0f1a;
+  --lamp-amber: #f5c842;
+  --bench-wood: #7a4f2d;
+  --bench-iron: #3a3a4a;
+  --vend-body:  #1e2a4a;
+  --vend-red:   #ff4466;
+  --text-main:  #f0e8d0;
+  --overlay-bg: rgba(8, 10, 20, 0.93);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--night-bg);
+  width: 100vw; height: 100vh;
+  overflow: hidden;
+  font-family: 'Press Start 2P', monospace;
+  image-rendering: pixelated;
+}
+
+/* ════════════════════════════════
+   SCENE
+════════════════════════════════ */
+#scene {
+  width: 100%; height: 100%;
+  position: relative;
+  background: linear-gradient(180deg,
+    #060810 0%,
+    #0d1228 45%,
+    #111830 70%,
+    #1a2240 100%
+  );
+}
+
+/* ── 星星 ── */
+.stars { position: absolute; inset: 0; pointer-events: none; }
+.star {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  animation: twinkle var(--d, 3s) ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  from { opacity: var(--a1, 0.2); }
+  to   { opacity: var(--a2, 0.9); }
+}
+
+/* ── 地面 ── */
+#ground {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 28%;
+  background: repeating-linear-gradient(
+    90deg,
+    #1c2235 0px, #1c2235 7px,
+    #1a2030 7px, #1a2030 14px
+  );
+  border-top: 4px solid #2a3050;
+}
+#ground::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0px, transparent 13px,
+    rgba(255,255,255,0.04) 13px, rgba(255,255,255,0.04) 14px
+  );
+}
+
+/* ── 路灯 ── */
+.lamp-wrap { position: absolute; bottom: 28%; }
+.lamp-pole {
+  width: 8px; background: #3a3d50;
+  margin: 0 auto; border-radius: 2px 2px 0 0;
+}
+.lamp-arm {
+  width: 60px; height: 8px;
+  background: #3a3d50;
+  border-radius: 4px 4px 0 0;
+  position: relative;
+}
+.lamp-head {
+  width: 28px; height: 14px;
+  background: var(--lamp-amber);
+  border-radius: 4px 4px 2px 2px;
+  position: absolute; right: 0; top: 8px;
+  box-shadow:
+    0 0 12px 6px rgba(245,200,66,0.55),
+    0 0 40px 20px rgba(245,200,66,0.18);
+}
+.lamp-cone {
+  position: absolute; top: 22px; right: -20px;
+  width: 120px; height: 200px;
+  background: radial-gradient(ellipse at 50% 0%,
+    rgba(245,200,66,0.13) 0%,
+    rgba(245,200,66,0.04) 50%,
+    transparent 100%
+  );
+  clip-path: polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%);
+  pointer-events: none;
+}
+#lamp-left { left: 12%; }
+#lamp-left .lamp-pole { height: 220px; }
+#lamp-left .lamp-arm  { transform: scaleX(-1); }
+#lamp-right { right: 10%; }
+#lamp-right .lamp-pole { height: 200px; }
+
+/* ── 公园长椅 ── */
+#bench {
+  position: absolute;
+  bottom: calc(28% + 2px);
+  left: 50%; transform: translateX(-50%);
+}
+.bench-back  { display: flex; gap: 4px; margin-bottom: 4px; }
+.bench-plank {
+  height: 12px; background: var(--bench-wood);
+  border-radius: 2px;
+  border-top: 2px solid #9a6a3d;
+  border-bottom: 2px solid #5a3a1d;
+}
+.bench-seat { display: flex; gap: 4px; }
+.bench-leg {
+  width: 8px; background: var(--bench-iron);
+  border-radius: 2px; border-right: 2px solid #5a5a6a;
+}
+.bench-support {
+  width: 100%; height: 6px;
+  background: var(--bench-iron);
+  border-radius: 2px; margin-top: 2px;
+}
+
+/* ── 自动售卖机 ── */
+#vending {
+  position: absolute; bottom: 28%; right: 22%;
+  width: 72px; image-rendering: pixelated;
+}
+.vend-body {
+  width: 72px; height: 130px;
+  background: var(--vend-body);
+  border: 3px solid #2e3d6a;
+  border-radius: 4px 4px 0 0;
+  position: relative; overflow: hidden;
+}
+.vend-brand {
+  width: 100%; height: 18px;
+  background: var(--vend-red);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 5px; color: #fff; letter-spacing: 1px;
+}
+.vend-window {
+  margin: 6px auto;
+  width: 54px; height: 60px;
+  background: #0a1020;
+  border: 2px solid #3a4a7a; border-radius: 2px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 3px; padding: 4px;
+}
+.vend-can { border-radius: 2px; position: relative; }
+.vend-can::after {
+  content: '';
+  position: absolute; top: 2px; left: 2px; right: 2px; height: 3px;
+  background: rgba(255,255,255,0.25); border-radius: 1px;
+}
+.vend-panel {
+  margin: 0 auto; width: 54px; height: 28px;
+  background: #151e38; border: 2px solid #2a3a60; border-radius: 2px;
+  display: flex; align-items: center; justify-content: space-around; padding: 0 4px;
+}
+.vend-btn {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.vend-slot {
+  width: 30px; height: 6px;
+  background: #0a1020; border: 1px solid #2a3a60; border-radius: 1px;
+}
+.vend-base {
+  width: 72px; height: 8px;
+  background: #1a2848; border: 3px solid #2e3d6a;
+  border-top: none; border-radius: 0 0 3px 3px;
+}
+.vend-body::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 40%,
+    rgba(160,232,255,0.06) 0%, transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* ── 远处树木剪影 ── */
+.tree { position: absolute; bottom: 28%; }
+.tree-trunk { width: 10px; background: #1a1e2e; margin: 0 auto; }
+.tree-top { background: #141828; clip-path: polygon(50% 0%, 100% 100%, 0% 100%); }
+
+/* ════════════════════════════════
+   OVERLAY
+════════════════════════════════ */
+#overlay {
+  position: fixed; inset: 0;
+  background: var(--overlay-bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 48px;
+  z-index: 100;
+  /* 默认可见，不加 transition，避免隐藏时有淡出过渡露出背景 */
+}
+#overlay.hidden {
+  display: none;
+}
+
+/* ── 对话文字区 ── */
+#overlay-text {
+  color: var(--text-main);
+  font-size: clamp(12px, 2.2vw, 20px);
+  line-height: 1;
+  text-align: center;
+  text-shadow:
+    0 0 10px rgba(245,200,66,0.35),
+    2px 2px 0 rgba(0,0,0,0.8);
+  max-width: 72vw;
+  /* 像素风：关闭抗锯齿 */
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+
+/* 每行对话 */
+.dialog-line {
+  display: block;
+  min-height: 2.2em;
+  letter-spacing: 0.08em;
+  /* 像素风阴影：右下偏移纯黑 */
+  text-shadow:
+    2px 2px 0 #000,
+    0 0 12px rgba(245,200,66,0.3);
+}
+
+/* 光标 */
+.type-cursor {
+  display: inline-block;
+  color: var(--lamp-amber);
+  font-size: 0.85em;
+  vertical-align: baseline;
+  animation: cursor-blink 0.7s step-end infinite;
+  text-shadow: 0 0 8px rgba(245,200,66,0.8);
+}
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── 选项区 ── */
+.choices {
+  display: flex;
+  flex-direction: column;   /* 上下排列 */
+  align-items: flex-start;
+  gap: 22px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+.choices.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.choice-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(11px, 1.8vw, 16px);
+  color: var(--text-main);
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 4px 0;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  text-shadow:
+    2px 2px 0 #000,
+    0 0 8px rgba(245,200,66,0.2);
+  /* 淡入动画 */
+  animation: choice-appear 0.3s ease both;
+  transition: color 0.15s, text-shadow 0.15s;
+}
+@keyframes choice-appear {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ▶ 前缀箭头 */
+.choice-arrow {
+  display: inline-block;
+  color: var(--lamp-amber);
+  margin-right: 10px;
+  font-size: 0.75em;
+  opacity: 0.5;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.choice-btn:hover {
+  color: var(--lamp-amber);
+  text-shadow:
+    2px 2px 0 #000,
+    0 0 14px rgba(245,200,66,0.6);
+}
+.choice-btn:hover .choice-arrow {
+  opacity: 1;
+  transform: translateX(3px);
+}
+.choice-btn:active {
+  transform: scale(0.97);
+}
+
+/* ── 装饰线 ── */
+.deco-line {
+  width: 180px; height: 2px;
+  background: linear-gradient(90deg,
+    transparent, var(--lamp-amber), transparent
+  );
+  opacity: 0.35;
+  /* 像素风：用阶梯渐变模拟点状 */
+  image-rendering: pixelated;
+}
+
+/* ── 结束画面 ── */
+#end-text {
+  position: fixed; inset: 0;
+  background: var(--overlay-bg);
+  color: var(--text-main);
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(12px, 2.2vw, 20px);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 36px;
+  z-index: 200;
+  text-align: center;
+  padding: 20px;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  /* 默认隐藏，不加过渡，直接切换 */
+  display: none;
+}
+#end-text.show {
+  display: flex;
+}
+#end-dialog .dialog-line {
+  text-align: center;
+}
+
+/* ── 像素装饰角 ── */
+.pixel-corner {
+  position: fixed;
+  width: 20px; height: 20px;
+  border-color: rgba(245,200,66,0.3);
+  border-style: solid;
+  z-index: 300;
+  pointer-events: none;
+}
+.pixel-corner.tl { top: 16px; left: 16px;  border-width: 3px 0 0 3px; }
+.pixel-corner.tr { top: 16px; right: 16px; border-width: 3px 3px 0 0; }
+.pixel-corner.bl { bottom: 16px; left: 16px;  border-width: 0 0 3px 3px; }
+.pixel-corner.br { bottom: 16px; right: 16px; border-width: 0 3px 3px 0; }
+
+/* ════════════════════════════════
+   开场界面
+════════════════════════════════ */
+#title-screen {
+  position: fixed; inset: 0;
+  background: #060810;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  cursor: pointer;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.7s ease;
+}
+#title-screen.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.title-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+/* 装饰线（复用 deco-line 宽度更大） */
+.title-deco {
+  width: 260px; height: 2px;
+  background: linear-gradient(90deg,
+    transparent, var(--lamp-amber), transparent
+  );
+  opacity: 0.4;
+}
+
+/* 开场光标 */
+#title-cursor {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(18px, 3vw, 28px);
+  color: var(--lamp-amber);
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  text-shadow:
+    0 0 16px rgba(245,200,66,0.9),
+    0 0 32px rgba(245,200,66,0.4);
+  animation: cursor-blink 0.7s step-end infinite;
+}
+
+/* 全屏闪光层 */
+#flash-screen {
+  position: fixed; inset: 0;
+  background: #fff;
+  z-index: 600;
+  display: none;
+  pointer-events: none;
+}
+#flash-screen.flash-active {
+  display: block;
+  animation: flash-anim 2.2s ease-out forwards;
+}
+@keyframes flash-anim {
+  0%    { opacity: 1; }
+  10%   { opacity: 0.92; }  /* 短暂峰值后稍降 */
+  75%   { opacity: 0.88; }  /* 在 overlay 散开期间（~1.65s）保持不透明 */
+  100%  { opacity: 0; }     /* 最后 0.55s 淡出，对应 JS 里 t=2000ms 移除 class */
+}

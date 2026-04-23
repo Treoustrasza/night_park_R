@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>夜晚的公园</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ══ 开场界面 ══ -->
+<div id="title-screen">
+  <div class="pixel-corner tl"></div>
+  <div class="pixel-corner tr"></div>
+  <div class="pixel-corner bl"></div>
+  <div class="pixel-corner br"></div>
+  <div class="title-inner">
+    <span id="title-cursor">█</span>
+  </div>
+</div>
+
+<!-- ══ 像素装饰角（主界面） ══ -->
+<div class="pixel-corner tl"></div>
+<div class="pixel-corner tr"></div>
+<div class="pixel-corner bl"></div>
+<div class="pixel-corner br"></div>
+
+<!-- ══ 场景 ══ -->
+<div id="scene">
+
+  <div class="stars" id="stars"></div>
+
+  <!-- 左侧路灯 -->
+  <div class="lamp-wrap" id="lamp-left">
+    <div class="lamp-arm">
+      <div class="lamp-head"></div>
+      <div class="lamp-cone"></div>
+    </div>
+    <div class="lamp-pole"></div>
+  </div>
+
+  <!-- 右侧路灯 -->
+  <div class="lamp-wrap" id="lamp-right">
+    <div class="lamp-arm">
+      <div class="lamp-head"></div>
+      <div class="lamp-cone"></div>
+    </div>
+    <div class="lamp-pole"></div>
+  </div>
+
+  <!-- 远处树木 -->
+  <div class="tree" style="left:5%">
+    <div class="tree-top" style="width:50px;height:80px;"></div>
+    <div class="tree-trunk" style="height:30px;"></div>
+  </div>
+  <div class="tree" style="left:18%">
+    <div class="tree-top" style="width:38px;height:60px;"></div>
+    <div class="tree-trunk" style="height:20px;"></div>
+  </div>
+  <div class="tree" style="right:5%">
+    <div class="tree-top" style="width:55px;height:90px;"></div>
+    <div class="tree-trunk" style="height:35px;"></div>
+  </div>
+  <div class="tree" style="right:16%">
+    <div class="tree-top" style="width:40px;height:65px;"></div>
+    <div class="tree-trunk" style="height:22px;"></div>
+  </div>
+
+  <!-- 公园长椅 -->
+  <div id="bench">
+    <div class="bench-back">
+      <div class="bench-plank" style="width:160px;"></div>
+    </div>
+    <div class="bench-seat">
+      <div class="bench-plank" style="width:160px;"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;width:160px;margin-top:2px;">
+      <div class="bench-leg" style="height:28px;"></div>
+      <div class="bench-leg" style="height:28px;"></div>
+    </div>
+    <div class="bench-support"></div>
+  </div>
+
+  <!-- 自动售卖机 -->
+  <div id="vending">
+    <div class="vend-body">
+      <div class="vend-brand">DRINKS</div>
+      <div class="vend-window">
+        <div class="vend-can" style="background:#e03030;"></div>
+        <div class="vend-can" style="background:#2080e0;"></div>
+        <div class="vend-can" style="background:#20b060;"></div>
+        <div class="vend-can" style="background:#e08020;"></div>
+        <div class="vend-can" style="background:#9030c0;"></div>
+        <div class="vend-can" style="background:#e0c020;"></div>
+      </div>
+      <div class="vend-panel">
+        <div class="vend-btn" style="background:#ff4466;"></div>
+        <div class="vend-btn" style="background:#44aaff;"></div>
+        <div class="vend-slot"></div>
+      </div>
+    </div>
+    <div class="vend-base"></div>
+  </div>
+
+  <div id="ground"></div>
+
+</div>
+
+<!-- ══ 蒙版对话层 ══ -->
+<div id="overlay">
+  <div class="deco-line"></div>
+  <div id="overlay-text"></div>
+  <div class="choices" id="choices"></div>
+  <div class="deco-line"></div>
+</div>
+
+<!-- ══ 全屏闪光层 ══ -->
+<div id="flash-screen"></div>
+
+<!-- ══ 结束画面（不是的分支） ══ -->
+<div id="end-text"></div>
+
+<script src="main.js"></script>
+</body>
+</html>
