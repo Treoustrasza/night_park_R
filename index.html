@@ -1114,7 +1114,7 @@ const WEEKEND_ACTIONS = [
 ];
 
 const EVENTS = [
-  { id:'pitch_fail', title:'提案翻车', week:[1,2],
+  { id:'pitch_fail', title:'提案翻车', weekdayOnly:true, week:[1,2],
     desc:'领导突然把你叫进会议室，当着几个大客户的面，要求你现场讲解你上周交的提案。这种场面你见过，但今天你突然发现自己连自己写了什么都没理清楚。领导的眼神越来越冷，你知道这个客户很重要——公司正在缺单子的时候。',
     choices:[
       { label:'硬撑，尽量讲清楚', key:'no_glass', perf:-6, sanity:-8, rep:-3, dep:0,
@@ -1122,7 +1122,7 @@ const EVENTS = [
       { label:'戴上眼镜，临场发挥', key:'glass', perf:+5, sanity:+2, rep:+4, dep:+12,
         text:'眼镜滑上鼻梁，你忽然口若悬河，把整个方案讲得条理清晰，客户频频点头。领导的表情松动了。散会后mentor把你拉到角落，小声说："……你今天哪来的这个状态？跟平时不一样。"' },
     ]},
-  { id:'colleague_conflict', title:'同事抢功', week:[1,2,3],
+  { id:'colleague_conflict', title:'同事抢功', weekdayOnly:true, week:[1,2,3],
     desc:'你花了三天做的方案被同事在全组会议上当成"我们一起讨论的结果"提交了上去，领导当场表扬了他。你就坐在旁边，没人提你的名字。不是第一次了——但今年大家都在争表现，谁都想留下来。',
     choices:[
       { label:'忍了，私下找mentor聊', key:'no_glass', perf:0, sanity:-7, rep:0, dep:0,
@@ -1130,7 +1130,7 @@ const EVENTS = [
       { label:'当场说明情况（戴着眼镜）', key:'glass', perf:+2, sanity:-2, rep:+6, dep:+8,
         text:'眼镜让你措辞得体、不卑不亢，你简短说明了设计细节，领导抬头看了你一眼："哦，是你做的？"同事脸色一变。你赢了这一局，但你知道他从此会更用心地挑你的毛病。' },
     ]},
-  { id:'leader_review', title:'领导突击检查', week:[2,3,4,5,6],
+  { id:'leader_review', title:'领导突击检查', weekdayOnly:true, week:[2,3,4,5,6],
     desc:'领导拿着你最近几周的提交记录，坐到你工位旁边，沉默了几秒后开口："讲讲你的设计思路。"你知道这不是随便问问——行业不好做，他在评估每个人的价值。',
     choices:[
       { label:'据实回答，诚实说有些地方不确定', key:'no_glass', perf:-4, sanity:+2, rep:+3, dep:0,
@@ -1138,7 +1138,7 @@ const EVENTS = [
       { label:'戴眼镜，侃侃而谈', key:'glass', perf:+4, sanity:0, rep:+2, dep:+10,
         text:'你流利地拆解每一个设计决策，连用色心理学都信手拈来。领导沉默了更长时间，然后说："说得不错。"但他看你的眼神，比之前更锐利了——像是在确认他刚才听到的是不是真的你。' },
     ]},
-  { id:'crunch_project', title:'紧急项目压下来', week:[2,3,4,5,6,7,8],
+  { id:'crunch_project', title:'紧急项目压下来', weekdayOnly:true, week:[2,3,4,5,6,7,8],
     desc:'大客户临时要求三天内出一套完整VI方案，按理应该两周做的事。领导把任务直接甩给了你和同事。同事当场说："这不合理，这就是在逼人走。"然后被领导叫去单独谈话，出来后就直接收拾东西离职了。你独自坐在工位前，盯着需求文档，知道这件事现在全压在你身上。',
     choices:[
       { label:'咬牙硬做，靠自己', key:'no_glass', perf:+6, sanity:-12, rep:+4, dep:0,
@@ -1146,7 +1146,7 @@ const EVENTS = [
       { label:'戴上眼镜全力冲刺', key:'glass', perf:+14, sanity:-4, rep:+7, dep:+15,
         text:'眼镜让你进入一种近乎超人的状态，三天出了一套专业水准的VI。领导在全组会议上表扬了你，说"这才是老员工应有的担当"。但你盯着那份稿子，心里有个声音在问：没有眼镜，我还做得出来吗？' },
     ]},
-  { id:'mentor_advice', title:'Mentor找你谈话', week:[2,3,4,5,6,7,8],
+  { id:'mentor_advice', title:'Mentor找你谈话', weekdayOnly:true, week:[2,3,4,5,6,7,8],
     desc:'Mentor叫你去喝咖啡，欲言又止了半天，最后说："我想跟你说一件事，但不知道怎么开口。"他停了停，"你最近有些东西……我说不清楚，但感觉不太对。你还好吗？"',
     choices:[
       { label:'说没事，一笑而过', key:'no_glass', perf:0, sanity:0, rep:0, dep:0,
@@ -1162,7 +1162,7 @@ const EVENTS = [
       { label:'戴上眼镜，给出一个完美回答', key:'glass', perf:0, sanity:-2, rep:+8, dep:+12,
         text:'你出口成章，引经据典，台下响起掌声。会后有人来要名片，说"你讲得比很多做了十年的人清晰"。但走出会场，你摘掉眼镜，努力回忆刚才自己说了什么——什么都想不起来了。那些话，不是你的。' },
     ]},
-  { id:'boss_private', title:'领导的私下质疑', week:[5,6,7,8,9,10,11,12],
+  { id:'boss_private', title:'领导的私下质疑', weekdayOnly:true, week:[5,6,7,8,9,10,11,12],
     desc:'领导把你叫到走廊上，没有录音，没有证人。他直视着你，声音压低了很多："你在这里做了两年，我记得你刚来的样子。你最近的输出……我有时候觉得很好，有时候又觉得完全是两个人做的。你在做什么？"',
     choices:[
       { label:'坦然回应："我在摸索，不稳定是真的"', key:'no_glass', perf:-2, sanity:-3, rep:+5, dep:0,
@@ -1170,7 +1170,7 @@ const EVENTS = [
       { label:'戴着眼镜，给出一套说辞', key:'glass', perf:0, sanity:-8, rep:0, dep:+14,
         text:'眼镜让你的解释天衣无缝，逻辑完整，甚至反过来让领导觉得自己可能想多了。他离开时若有所思。但你站在走廊里发现，你刚才对他撒谎了，而且撒得那么流利，那么自然——你已经说不清楚什么是真的了。' },
     ]},
-  { id:'colleague_breakdown', title:'同事的愤怒', week:[4,5,6,7,8,9,10],
+  { id:'colleague_breakdown', title:'同事的愤怒', weekdayOnly:true, week:[4,5,6,7,8,9,10],
     desc:'同事因为项目被否，在茶水间摔了马克杯。他骂了很多话，最后转向你大喊："你最近风头那么正——大家都知道你走了捷径，你不觉得亏心吗？！"茶水间静得落针可闻。你知道他这段时间一直活在被裁的恐惧里，但他说的那句话……刺到你了。',
     choices:[
       { label:'冷静说明，不激化矛盾', key:'no_glass', perf:0, sanity:-4, rep:+3, dep:0,
@@ -1186,7 +1186,7 @@ const EVENTS = [
       { label:'戴眼镜，撰文维权、公开声明', key:'glass', perf:0, sanity:-3, rep:+6, dep:+10,
         text:'在眼镜辅助下你写了一篇措辞严谨的声明，转发量不少，最后对方致歉。但评论区有人说："这篇声明写得比ta作品集里其他文章都好，感觉不像同一个人写的。"你注意到这句话，然后默默把评论区关掉了。' },
     ]},
-  { id:'final_review', title:'季度考核', week:[10,11,12],
+  { id:'final_review', title:'季度考核', weekdayOnly:true, week:[10,11,12],
     desc:'公司进行季度考核。领导要求每人做五分钟汇报，当场问答。HR提前在会议室门口摆了签到表，气氛和以往不一样。这是年末最重要的一环，关系到你还能不能继续待在这里。',
     choices:[
       { label:'用真实积累做汇报，不借助眼镜', key:'no_glass', perf:+5, sanity:+5, rep:+8, dep:0,
@@ -1224,7 +1224,8 @@ function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
 function pickEvent() {
   const wk = weekNum(G.day);
-  const eligible = G.eventPool.filter(e => e.week.includes(wk));
+  const isWD = !isWeekend(G.day);
+  const eligible = G.eventPool.filter(e => e.week.includes(wk) && (!e.weekdayOnly || isWD));
   if (!eligible.length || Math.random() > 0.40) return null;
   const idx = Math.floor(Math.random() * eligible.length);
   const ev = eligible[idx];
@@ -1274,17 +1275,43 @@ function buildDayNarrative() {
     html += line('npc-self','你："还行。"');
     html += line('npc-narrator','Mentor沉默了一下，端起杯子，没再追问。');
   } else if (G.perf <= 25) {
-    html += line('npc-narrator','业绩不好看。你知道这意味着什么——上次裁员名单里，业绩垫底的人一个都没留下来。');
-    html += line('npc-mentor','Mentor（皱着眉）："你这周的稿子……跟领导的要求差距有点大。要不要我帮你过一遍？"');
+    if (isWeekend(G.day)) {
+      html += line('npc-narrator','业绩的数字在脑子里转。你知道这意味着什么——上次裁员名单里，业绩垫底的人一个都没留下来。');
+      html += line('npc-narrator','周末也没办法真正放下来。');
+    } else {
+      html += line('npc-narrator','业绩不好看。你知道这意味着什么——上次裁员名单里，业绩垫底的人一个都没留下来。');
+      html += line('npc-mentor','Mentor（皱着眉）："你这周的稿子……跟领导的要求差距有点大。要不要我帮你过一遍？"');
+    }
   } else if (G.sanity <= 25) {
-    html += line('npc-narrator','你发现自己上班时会莫名其妙发呆，对着设计稿脑子里一片空白。');
-    html += line('npc-narrator','已经不记得上次真心喜欢做一个东西是什么时候了。可能是入职前，可能是更早。');
+    if (isWeekend(G.day)) {
+      html += line('npc-narrator','休息了一天，但好像没有真的休息到。脑子还是空的，只是换了个地方发呆。');
+      html += line('npc-narrator','已经不记得上次真心喜欢做一个东西是什么时候了。可能是入职前，可能是更早。');
+    } else {
+      html += line('npc-narrator','你发现自己上班时会莫名其妙发呆，对着设计稿脑子里一片空白。');
+      html += line('npc-narrator','已经不记得上次真心喜欢做一个东西是什么时候了。可能是入职前，可能是更早。');
+    }
   } else if (G.dep >= 70) {
-    html += line('npc-narrator','你意识到，摘下眼镜盯着空白的画布，你不知道从哪里开始了。');
-    html += line('npc-narrator','你试着回想，不戴它的时候你是怎么开始的——想不起来了。');
-    html += line('npc-mentor','Mentor（若有所思）："你最近……好像不戴那个就做不下去了？"');
+    if (isWeekend(G.day)) {
+      html += line('npc-narrator','你今天没有拿出那副眼镜，但总觉得少了什么，手边空落落的。');
+      html += line('npc-narrator','你试着随便画了点东西，画了两笔停下来——不知道自己在画什么，也不知道从哪里开始。');
+    } else {
+      html += line('npc-narrator','你意识到，摘下眼镜盯着空白的画布，你不知道从哪里开始了。');
+      html += line('npc-narrator','你试着回想，不戴它的时候你是怎么开始的——想不起来了。');
+      html += line('npc-mentor','Mentor（若有所思）："你最近……好像不戴那个就做不下去了？"');
+    }
+  } else if (isWeekend(G.day)) {
+    const weekendFlavors = [
+      line('npc-narrator','今天不用上班。你睡到九点多才醒，窗帘没拉严，一条光斜在被子上。'),
+      line('npc-narrator','周末的街道比平时安静，楼下有小孩在骑车。你站在阳台上发了一会儿呆，没有特别想做什么。'),
+      line('npc-narrator','你打开手机，第一个看的还是工作群。消息不多，你退出来，把手机翻过去扣在桌上。'),
+      line('npc-narrator','难得的空白时间，你却不知道怎么用。脑子里有根弦好像还绷着，一时松不下来。'),
+      line('npc-narrator','你翻出一本很久没看的书，看了两页，脑子开始飘。最后把书放回去，去厨房倒了杯水。'),
+      line('npc-narrator','外面偶尔有风，天气不错。你没出门，但拉开了窗户，听了一会儿楼下的声音。'),
+      line('npc-narrator','周末下午总有一种奇怪的空——不是无聊，是某种说不清楚的、不知道该怎么填的空白。'),
+    ];
+    html += weekendFlavors[G.day % weekendFlavors.length];
   } else {
-    const flavors = [
+    const weekdayFlavors = [
       line('npc-narrator','又是普通的一天。咖啡机还是坏的，空调还是太冷，走廊里贴着的"降本增效"的海报换了新颜色。'),
       line('npc-colleague','同事（甩过来一份参考图）："这个风格你觉得能做吗？领导那边还在等，上次改了四遍他还不满意。"'),
       line('npc-narrator','楼道里有人在打电话，声音压得很低。你大概能猜到是什么事，但你没有精力在乎别人的事了。'),
@@ -1293,7 +1320,7 @@ function buildDayNarrative() {
       line('npc-colleague','同事（小声）："哎，听说这季度如果数字再差，年终奖就没了。你觉得是真的吗？"') + line('npc-self','你："……不知道。"'),
       line('npc-narrator','今天的工作量比想象中多，截止时间比想象中近。你已经不对这件事感到意外了。'),
     ];
-    html += flavors[G.day % flavors.length];
+    html += weekdayFlavors[G.day % weekdayFlavors.length];
   }
   return html;
 }
