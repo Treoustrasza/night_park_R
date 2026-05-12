@@ -1418,7 +1418,6 @@ function confirmAction() {
   G.rep    = clamp(G.rep    + dr, 0, 100);
   G.dep    = clamp(G.dep    + dd, 0, 100);
 
-  resultHTML += `<div style="margin-top:10px;font-size:0.8em;color:#888;">${formatDeltas(dp,ds,dr,dd)}</div>`;
   if (bonusMsg) resultHTML += `<div style="margin-top:10px;font-size:0.82em;color:rgba(245,200,66,0.7);font-family:'Noto Serif SC',serif;">${bonusMsg}</div>`;
   setNarrative(resultHTML);
   renderStatusBars();
