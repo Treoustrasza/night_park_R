@@ -462,25 +462,25 @@ body {
     <!-- 状态面板 -->
     <div id="status-panel">
       <div class="date-info">
-        <span id="date-display">三月一日 · 周一 · 第1天</span>
-        <span class="glasses-count">眼镜 <span id="glasses-used-count">0</span> 次</span>
+        <span id="date-display">3月1日 · 周一 · 第1天</span>
+        <span class="glasses-count" style="display:none">眼镜 <span id="glasses-used-count">0</span> 次</span>
       </div>
       <div class="status-row" id="row-perf">
         <div class="stat-label">业绩</div>
         <div class="stat-bar-bg"><div class="stat-bar-fill bar-perf" id="bar-perf" style="width:50%"></div></div>
-        <div class="stat-val" id="val-perf">50</div>
+        <div class="stat-val" id="val-perf" style="display:none">50</div>
       </div>
       <div class="status-row" id="row-sanity">
         <div class="stat-label">心态</div>
         <div class="stat-bar-bg"><div class="stat-bar-fill bar-sanity" id="bar-sanity" style="width:60%"></div></div>
-        <div class="stat-val" id="val-sanity">60</div>
+        <div class="stat-val" id="val-sanity" style="display:none">60</div>
       </div>
       <div class="status-row" id="row-rep">
         <div class="stat-label">声誉</div>
         <div class="stat-bar-bg"><div class="stat-bar-fill bar-rep" id="bar-rep" style="width:40%"></div></div>
-        <div class="stat-val" id="val-rep">40</div>
+        <div class="stat-val" id="val-rep" style="display:none">40</div>
       </div>
-      <div class="status-row" id="row-dep">
+      <div class="status-row" id="row-dep" style="display:none">
         <div class="stat-label">依赖</div>
         <div class="stat-bar-bg"><div class="stat-bar-fill bar-dep" id="bar-dep" style="width:0%"></div></div>
         <div class="stat-val" id="val-dep">0</div>
@@ -619,9 +619,10 @@ function parseSegments(line) {
   return segs;
 }
 
-function typeTextInto(container, lines, onDone) {
-  container.innerHTML = '';
+function typeTextInto(container, lines, onDone, append) {
+  if (!append) container.innerHTML = '';
   if (typingTimer) { clearTimeout(typingTimer); typingTimer = null; }
+  if (append) { const old = container.querySelector('.type-cursor'); if (old) old.remove(); }
   const lineEls = lines.map(line => {
     const isBlankLine = line === '';
     const isFullPause = /^\{PAUSE:(\d+)\}$/.test(line);
@@ -681,7 +682,8 @@ function typeTextInto(container, lines, onDone) {
   tick();
 }
 
-function typeText(lines, onDone) { typeTextInto(textEl, lines, onDone); }
+function typeText(lines, onDone) { typeTextInto(textEl, lines, onDone, false); }
+function appendText(lines, onDone) { typeTextInto(textEl, lines, onDone, true); }
 
 function showChoices(options) {
   choicesEl.innerHTML = ''; choicesEl.classList.remove('visible');
@@ -711,7 +713,29 @@ function beginDialog() {
     [
       { label: '我也是',  action: () => setScene(['工作很辛苦吗？{PAUSE:400}累了吗？'], [{ label: '是的', action: onYes }, { label: '不是', action: onNo }]) },
       { label: '……',      action: () => setScene(['工作很辛苦吗？{PAUSE:400}累了吗？'], [{ label: '是的', action: onYes }, { label: '不是', action: onNo }]) },
+      { label: '还没腻吗？我们已经不是第一次见面了。', action: skipToGame },
     ]
+  );
+}
+
+function skipToGame() {
+  choicesEl.innerHTML = ''; choicesEl.classList.remove('visible');
+  typeText(
+    ['我明白了。', '{PAUSE:900}', '', '那么，请您尽情享受。', '{PAUSE:1200}'],
+    () => {
+      setTimeout(() => {
+        overlay.style.transition = 'clip-path 1.6s cubic-bezier(0.4,0,0.2,1), opacity 1.6s ease';
+        overlay.style.clipPath   = 'circle(0% at 50% 50%)';
+        overlay.style.opacity    = '0';
+        setTimeout(() => {
+          overlay.style.transition = '';
+          overlay.style.clipPath   = '';
+          overlay.style.opacity    = '';
+          overlay.classList.add('hidden');
+          enterGame();
+        }, 1650);
+      }, 600);
+    }
   );
 }
 
@@ -763,9 +787,11 @@ function startGlassesExperience() {
     [
       '从对面的那双手上递来一副眼镜。',
       '{PAUSE:600}',
-      '你把它拿在手里，翻来覆去看了看。',
+      '你将它翻来覆去看了看。',
       '{PAUSE:600}',
-      '普通的金属镜架，普通的镜片，看起来没什么特别之处。',
+      '普通的金属镜架，普通的镜片，',
+      '{PAUSE:600}',
+      '简直就和你本人一样平庸。',
       '{PAUSE:800}',
       '',
     ],
@@ -793,7 +819,7 @@ function startGlassesExperience() {
             '风还是从左边吹过来的。',
             '{PAUSE:1000}',
             '',
-            '然后你忽然意识到——',
+            '但你忽然意识到——',
             '{PAUSE:700}',
             '你的脑子里，有什么东西开始转动了。',
             '{PAUSE:900}',
@@ -801,11 +827,9 @@ function startGlassesExperience() {
           () => {
             typeText(
               [
-                '不是魔法，不是超能力。',
-                '{PAUSE:500}',
-                '更像是某个一直在你脑子里沉默的东西，',
+                '早已习惯了的平庸思维，切实地，',
                 '{PAUSE:600}',
-                '突然翻涌起来。',
+                '以某种令人陌生的方式，喀啦喀啦地高速运转起来。',
                 '{PAUSE:1200}',
                 '',
                 '你想到了上周那个搁置的提案，',
@@ -846,6 +870,7 @@ function glassesExperienceReact(choice) {
   choicesEl.innerHTML = '';
   choicesEl.classList.remove('visible');
 
+  // 独白追加在"那种感觉……"之后，不清屏
   let lines;
   if (choice === 'found') {
     lines = [
@@ -854,14 +879,14 @@ function glassesExperienceReact(choice) {
       '',
       '也许你是对的。',
       '{PAUSE:600}',
-      '也许那个东西一直都在，只是需要一点……帮助。',
+      '也许这种才能一直都在，只是需要轻轻地推上一把。',
       '{PAUSE:1100}',
       '',
       '不过，找回来的东西，',
       '{PAUSE:500}',
-      '和本来就有的东西，',
+      '真的属于你吗？',
       '{PAUSE:500}',
-      '是一样的吗？',
+      '要怎么做，才能将它握在手里？',
       '{PAUSE:1400}',
     ];
   } else if (choice === 'lost') {
@@ -878,7 +903,7 @@ function glassesExperienceReact(choice) {
       '',
       '你似乎对它足够警惕。',
       '{PAUSE:1000}',
-      '这也许并不是坏事。',
+      '也许，这并不是坏事。',
       '{PAUSE:1400}',
     ];
   } else {
@@ -899,32 +924,30 @@ function glassesExperienceReact(choice) {
   }
 
   typeText(lines, () => {
-    typeText(
-      [ '', '{PAUSE:600}' ],
-      () => {
-        showChoices([{ label: '摘下眼镜', action: () => {
-          choicesEl.innerHTML = '';
-          choicesEl.classList.remove('visible');
-          typeText(
-            [
-              '你摘下眼镜，放进口袋。',
-              '{PAUSE:700}',
-              '',
-              '明天，又要上班了。',
-              '{PAUSE:1800}',
-            ],
-            () => {
-              setTimeout(() => {
-                // 剧情结束，隐藏 overlay 再进入游戏
-                overlay.style.background = '';
-                overlay.classList.add('hidden');
-                enterGame();
-              }, 600);
-            }
-          );
-        }}]);
-      }
-    );
+    console.log('[debug] typeText onDone fired, textEl children:', textEl.children.length, 'innerHTML length:', textEl.innerHTML.length);
+    showChoices([{ label: '摘下眼镜', action: () => {
+      choicesEl.innerHTML = '';
+      choicesEl.classList.remove('visible');
+      typeText(
+        [
+          '你摇摇头，摘下眼镜放进口袋。',
+          '{PAUSE:700}',
+          '作为一家外包公司的平面设计师，你并没有多余的时间伤春悲秋。',
+          '{PAUSE:1000}',
+          '',
+          '明天，又要上班了。',
+          '{PAUSE:1800}',
+        ],
+        () => {
+          setTimeout(() => {
+            // 剧情结束，隐藏 overlay 再进入游戏
+            overlay.style.background = '';
+            overlay.classList.add('hidden');
+            enterGame();
+          }, 600);
+        }
+      );
+    }}]);
   });
 }
 
@@ -1049,19 +1072,19 @@ const DAYS_TOTAL = 90;
 
 const WEEKDAY_ACTIONS = [
   { id:'wk_normal', label:'正常完成任务', effect:'完成日常设计工作，勉勉强强，但没什么亮点。',
-    perf:+2, sanity:-1, rep:0, glassPerf:+8, glassSanity:0, glassRep:+2,
+    perf:+2, sanity:-1, rep:-1, glassPerf:+8, glassSanity:0, glassRep:+2,
     normalText:'你打开PS，对着参考图挤出方案，一如既往。领导没夸也没批，工资照发。你盯着屏幕发了一会儿呆，然后把窗口最小化，去倒了杯水。',
     glassText:'眼镜的加持让思路异常清晰，配色一气呵成，连你自己都觉得惊艳。同事走过来问了句"这个用了什么参考"，你说"没什么，随手做的"，然后把眼镜往鼻梁上推了推。' },
   { id:'wk_overtime', label:'主动加班', effect:'提交额外工作量，业绩提升但心态受损。',
     perf:+5, sanity:-5, rep:+1, glassPerf:+12, glassSanity:-2, glassRep:+3,
     normalText:'你又一次是最后一个关电脑的人。楼下便利店的收银员已经认识你，会主动帮你加热包子。你有时候觉得，你和他聊的话，比跟很多同事都多。',
     glassText:'戴着眼镜加班效率翻倍，一晚上的产出足以在周会上撑起你的数字。但地铁末班车上，你盯着黑色玻璃里自己的脸发了很久的呆——那副眼镜摘了，你感觉自己少了点什么。' },
-  { id:'wk_study', label:'花时间自学', effect:'提升真实能力，短期业绩无变化但声誉慢慢积累。',
-    perf:-1, sanity:+2, rep:+3, glassPerf:-1, glassSanity:+2, glassRep:+3,
+{ id:'wk_study', label:'在完成工作的基础上花时间自学', effect:'提升真实能力，短期业绩无变化但声誉慢慢积累。',
+perf:-1, sanity:-2, rep:0, glassPerf:+2, glassSanity:-2, glassRep:0,
     normalText:'午休时间刷了一套新教程，做了点笔记。不知道什么时候能用上，但总比什么都不做好。你合上笔记本，重新打开工作文件。',
     glassText:'戴着眼镜学习，概念消化飞快，笔记记了满满几页。但摘下来翻看，总感觉那些字是别人写的。' },
   { id:'wk_low', label:'摸鱼低调过一天', effect:'保存心态，但业绩下滑。',
-    perf:-3, sanity:+4, rep:0, glassPerf:+3, glassSanity:+4, glassRep:0,
+    perf:-3, sanity:+4, rep:-2, glassPerf:+3, glassSanity:+4, glassRep:0,
     normalText:'你假装在改稿，实际上刷了两小时短视频。心情好多了，活没干完。截止日还有两天，先这样吧。',
     glassText:'眼镜让你在摸鱼之余顺手把几个遗留问题处理了，领导那边也看不出你实际上今天没怎么用力。完美掩护。但你总觉得这样用……有点对不起它，也对不起自己。' },
 ];
@@ -1083,8 +1106,8 @@ const WEEKEND_ACTIONS = [
     perf:0, sanity:+12, rep:0, glassPerf:0, glassSanity:+12, glassRep:0,
     normalText:'朋友说你最近看起来很累，你笑笑说"还行"。吃了顿火锅，他们聊了很多和工作无关的事，你发现你已经不太记得怎么说这些了——但今晚还是找回来了一点点。',
     glassText:'你没戴眼镜出门。久违地当了几个小时的普通人，不需要表现，不需要输出。朋友问你最近公司怎么样，你说"还行"，然后把话题转开了。' },
-  { id:'we_learn', label:'报个周末培训班', effect:'声誉和能力长期积累，耗费精力。',
-    perf:0, sanity:-3, rep:+6, glassPerf:0, glassSanity:-3, glassRep:+4,
+  { id:'we_learn', label:'听课学习', effect:'声誉和能力长期积累，耗费精力。',
+    perf:0, sanity:-4, rep:0, glassPerf:0, glassSanity:-4, glassRep:0,
     normalText:'培训班的老师讲得不错，你认真做了笔记。身边同学的眼神都有点像你——各有各的难处，各有各的盘算。大家一起低头抄，谁都没多问。这笔钱花得值。',
     glassText:'眼镜让你消化课程内容轻而易举，课上的表现比旁边的人都好。但课后和同学一起讨论的时候，你摘下眼镜，发现自己其实什么都没真正内化——只是暂时理解了而已。' },
 ];
@@ -1179,6 +1202,8 @@ function initGameState() {
   G = {
     day: 1, perf: 50, sanity: 60, rep: 40, dep: 0,
     glassesUsed: 0, useGlassesToday: false,
+    studyCount: 0,  // 自学次数
+    learnCount: 0,  // 听课次数
     selectedAction: null, selectedEventChoice: null, currentEvent: null,
     eventPool: [...EVENTS],
   };
@@ -1192,7 +1217,7 @@ function monthDay(day) {
   const months = [31, 31, 30];
   let d = day, m = 0;
   while (d > months[m]) { d -= months[m]; m++; }
-  return `${['三','四','五'][m]}月${d}日`;
+  return `${m + 3}月${d}日`;
 }
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
@@ -1234,7 +1259,7 @@ function buildDayNarrative() {
     html += line('npc-narrator','只是上个月刚走了两个人。据说还有一轮考核。');
     html += line('npc-narrator','你把那副眼镜压在口袋最深处，打开电脑，登上钉钉，假装什么都没发生过。');
     html += line('npc-mentor','Mentor（路过你工位，压低声音）："来了。今天有个客户回访，注意点状态。"');
-  } else if (G.day === 7) {
+  } else if (G.day === 5) {
     html += line('npc-narrator','第一周结束了。你还在。');
     html += line('npc-narrator','HR下午找了一个设计师谈话，谈完那人直接回座位收了桌上的东西。');
     html += line('npc-narrator','你低着头，没看，假装在改稿。');
@@ -1281,7 +1306,7 @@ function renderActions() {
   actions.forEach(a => {
     const btn = document.createElement('button');
     btn.className = 'action-btn'; btn.dataset.id = a.id;
-    btn.innerHTML = `<strong>${a.label}</strong><div class="action-effect">${a.effect}</div>`;
+    btn.innerHTML = `<strong>${a.label}</strong>`;
     btn.onclick = () => selectAction(a.id);
     container.appendChild(btn);
   });
@@ -1320,7 +1345,7 @@ function toggleGlasses() {
   G.useGlassesToday = !G.useGlassesToday;
   document.getElementById('glasses-toggle').classList.toggle('active', G.useGlassesToday);
   document.getElementById('glasses-hint').textContent = G.useGlassesToday
-    ? `第 ${G.glassesUsed + 1} 次`
+    ? '应该会顺利很多吧'
     : '表现会不一样';
   updateConfirmBtn();
 }
@@ -1368,12 +1393,32 @@ function confirmAction() {
     resultHTML += line('npc-narrator', action.normalText);
   }
 
+  // 统计自学/听课次数，触发能力bonus
+  let bonusMsg = '';
+  if (action.id === 'wk_study') {
+    G.studyCount++;
+    if (G.studyCount === 10) bonusMsg = '你已经坚持自学了十次。那些笔记开始内化成真正的习惯——不戴眼镜完成任务时，表现会好一些了。';
+    if (G.studyCount === 20) bonusMsg = '二十次自学积累下来，你能明显感觉到自己在进步。脑子里有些东西变扎实了。';
+  }
+  if (action.id === 'we_learn') {
+    G.learnCount++;
+    if (G.learnCount === 10) bonusMsg = '十次课程听下来，那些知识点开始真正沉淀——不戴眼镜完成任务时，表现会好一些了。';
+    if (G.learnCount === 20) bonusMsg = '二十次课程之后，你已经把很多东西真正学会了。这给你一种安心感。';
+  }
+
+  // 不戴眼镜正常完成任务时，根据积累给bonus
+  if (!useGlass && action.id === 'wk_normal') {
+    const bonus = Math.floor((G.studyCount + G.learnCount) / 10);
+    if (bonus > 0) { dp += bonus; dr += bonus; }
+  }
+
   G.perf   = clamp(G.perf   + dp, 0, 100);
   G.sanity = clamp(G.sanity + ds, 0, 100);
   G.rep    = clamp(G.rep    + dr, 0, 100);
   G.dep    = clamp(G.dep    + dd, 0, 100);
 
   resultHTML += `<div style="margin-top:10px;font-size:0.8em;color:#888;">${formatDeltas(dp,ds,dr,dd)}</div>`;
+  if (bonusMsg) resultHTML += `<div style="margin-top:10px;font-size:0.82em;color:rgba(245,200,66,0.7);font-family:'Noto Serif SC',serif;">${bonusMsg}</div>`;
   setNarrative(resultHTML);
   renderStatusBars();
 
