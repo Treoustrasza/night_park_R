@@ -3,8 +3,376 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>夜晚的公园</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>一副眼镜</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400&display=swap" />
+<style>
+/* ═══════════════════════════════════════════════
+   RESET & ROOT
+═══════════════════════════════════════════════ */
+:root {
+  --night-bg:   #0d0f1a;
+  --lamp-amber: #f5c842;
+  --bench-wood: #7a4f2d;
+  --bench-iron: #3a3a4a;
+  --vend-body:  #1e2a4a;
+  --vend-red:   #ff4466;
+  --text-main:  #f0e8d0;
+  --overlay-bg: rgba(8, 10, 20, 0.93);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--night-bg);
+  width: 100vw; height: 100vh;
+  overflow: hidden;
+  font-family: 'Press Start 2P', monospace;
+  image-rendering: pixelated;
+}
+
+/* ═══════════════════════════════════════════════
+   SCENE (pixel-night 公园背景)
+═══════════════════════════════════════════════ */
+#scene {
+  width: 100%; height: 100%;
+  position: relative;
+  background: linear-gradient(180deg,
+    #060810 0%, #0d1228 45%, #111830 70%, #1a2240 100%
+  );
+}
+.stars { position: absolute; inset: 0; pointer-events: none; }
+.star {
+  position: absolute; background: #fff; border-radius: 50%;
+  animation: twinkle var(--d, 3s) ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  from { opacity: var(--a1, 0.2); }
+  to   { opacity: var(--a2, 0.9); }
+}
+#ground {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 28%;
+  background: repeating-linear-gradient(
+    90deg, #1c2235 0px, #1c2235 7px, #1a2030 7px, #1a2030 14px
+  );
+  border-top: 4px solid #2a3050;
+}
+#ground::after {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    180deg, transparent 0px, transparent 13px,
+    rgba(255,255,255,0.04) 13px, rgba(255,255,255,0.04) 14px
+  );
+}
+.lamp-wrap { position: absolute; bottom: 28%; }
+.lamp-pole { width: 8px; background: #3a3d50; margin: 0 auto; border-radius: 2px 2px 0 0; }
+.lamp-arm { width: 60px; height: 8px; background: #3a3d50; border-radius: 4px 4px 0 0; position: relative; }
+.lamp-head {
+  width: 28px; height: 14px; background: var(--lamp-amber);
+  border-radius: 4px 4px 2px 2px; position: absolute; right: 0; top: 8px;
+  box-shadow: 0 0 12px 6px rgba(245,200,66,0.55), 0 0 40px 20px rgba(245,200,66,0.18);
+}
+.lamp-cone {
+  position: absolute; top: 22px; right: -20px; width: 120px; height: 200px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(245,200,66,0.13) 0%, rgba(245,200,66,0.04) 50%, transparent 100%);
+  clip-path: polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%); pointer-events: none;
+}
+#lamp-left { left: 12%; }
+#lamp-left .lamp-pole { height: 220px; }
+#lamp-left .lamp-arm  { transform: scaleX(-1); }
+#lamp-right { right: 10%; }
+#lamp-right .lamp-pole { height: 200px; }
+#bench {
+  position: absolute; bottom: calc(28% + 2px);
+  left: 50%; transform: translateX(-50%);
+}
+.bench-back  { display: flex; gap: 4px; margin-bottom: 4px; }
+.bench-plank { height: 12px; background: var(--bench-wood); border-radius: 2px; border-top: 2px solid #9a6a3d; border-bottom: 2px solid #5a3a1d; }
+.bench-seat  { display: flex; gap: 4px; }
+.bench-leg   { width: 8px; background: var(--bench-iron); border-radius: 2px; border-right: 2px solid #5a5a6a; }
+.bench-support { width: 100%; height: 6px; background: var(--bench-iron); border-radius: 2px; margin-top: 2px; }
+#vending { position: absolute; bottom: 28%; right: 22%; width: 72px; image-rendering: pixelated; }
+.vend-body { width: 72px; height: 130px; background: var(--vend-body); border: 3px solid #2e3d6a; border-radius: 4px 4px 0 0; position: relative; overflow: hidden; }
+.vend-brand { width: 100%; height: 18px; background: var(--vend-red); display: flex; align-items: center; justify-content: center; font-size: 5px; color: #fff; letter-spacing: 1px; }
+.vend-window { margin: 6px auto; width: 54px; height: 60px; background: #0a1020; border: 2px solid #3a4a7a; border-radius: 2px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 3px; padding: 4px; }
+.vend-can { border-radius: 2px; position: relative; }
+.vend-can::after { content: ''; position: absolute; top: 2px; left: 2px; right: 2px; height: 3px; background: rgba(255,255,255,0.25); border-radius: 1px; }
+.vend-panel { margin: 0 auto; width: 54px; height: 28px; background: #151e38; border: 2px solid #2a3a60; border-radius: 2px; display: flex; align-items: center; justify-content: space-around; padding: 0 4px; }
+.vend-btn { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); }
+.vend-slot { width: 30px; height: 6px; background: #0a1020; border: 1px solid #2a3a60; border-radius: 1px; }
+.vend-base { width: 72px; height: 8px; background: #1a2848; border: 3px solid #2e3d6a; border-top: none; border-radius: 0 0 3px 3px; }
+.vend-body::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 40%, rgba(160,232,255,0.06) 0%, transparent 70%); pointer-events: none; }
+.tree { position: absolute; bottom: 28%; }
+.tree-trunk { width: 10px; background: #1a1e2e; margin: 0 auto; }
+.tree-top { background: #141828; clip-path: polygon(50% 0%, 100% 100%, 0% 100%); }
+
+/* ═══════════════════════════════════════════════
+   PIXEL-NIGHT OVERLAY（对话层）
+═══════════════════════════════════════════════ */
+#overlay {
+  position: fixed; inset: 0;
+  background: var(--overlay-bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 48px; z-index: 100;
+}
+#overlay.hidden { display: none; }
+
+#overlay-text {
+  color: var(--text-main);
+  font-size: clamp(12px, 2.2vw, 20px);
+  line-height: 1; text-align: center;
+  text-shadow: 0 0 10px rgba(245,200,66,0.35), 2px 2px 0 rgba(0,0,0,0.8);
+  max-width: 72vw;
+  -webkit-font-smoothing: none; font-smooth: never;
+}
+.dialog-line {
+  display: block; min-height: 2.2em; letter-spacing: 0.08em;
+  text-shadow: 2px 2px 0 #000, 0 0 12px rgba(245,200,66,0.3);
+}
+.type-cursor {
+  display: inline-block; color: var(--lamp-amber); font-size: 0.85em;
+  vertical-align: baseline; animation: cursor-blink 0.7s step-end infinite;
+  text-shadow: 0 0 8px rgba(245,200,66,0.8);
+}
+@keyframes cursor-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+.choices {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 22px;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+.choices.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.choice-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(11px, 1.8vw, 16px); color: var(--text-main);
+  background: transparent; border: none; outline: none;
+  padding: 4px 0; cursor: pointer; letter-spacing: 0.05em;
+  -webkit-font-smoothing: none; font-smooth: never;
+  text-shadow: 2px 2px 0 #000, 0 0 8px rgba(245,200,66,0.2);
+  animation: choice-appear 0.3s ease both;
+  transition: color 0.15s, text-shadow 0.15s;
+}
+@keyframes choice-appear { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+.choice-arrow { display: inline-block; color: var(--lamp-amber); margin-right: 10px; font-size: 0.75em; opacity: 0.5; transition: opacity 0.15s, transform 0.15s; }
+.choice-btn:hover { color: var(--lamp-amber); text-shadow: 2px 2px 0 #000, 0 0 14px rgba(245,200,66,0.6); }
+.choice-btn:hover .choice-arrow { opacity: 1; transform: translateX(3px); }
+.choice-btn:active { transform: scale(0.97); }
+
+.deco-line { width: 180px; height: 2px; background: linear-gradient(90deg, transparent, var(--lamp-amber), transparent); opacity: 0.35; image-rendering: pixelated; }
+
+#end-text {
+  position: fixed; inset: 0; background: var(--overlay-bg); color: var(--text-main);
+  font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.2vw, 20px);
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 36px; z-index: 200; text-align: center; padding: 20px;
+  -webkit-font-smoothing: none; font-smooth: never; display: none;
+}
+#end-text.show { display: flex; }
+#end-dialog .dialog-line { text-align: center; }
+
+.pixel-corner {
+  position: fixed; width: 20px; height: 20px;
+  border-color: rgba(245,200,66,0.3); border-style: solid;
+  z-index: 300; pointer-events: none;
+}
+.pixel-corner.tl { top: 16px; left: 16px;   border-width: 3px 0 0 3px; }
+.pixel-corner.tr { top: 16px; right: 16px;  border-width: 3px 3px 0 0; }
+.pixel-corner.bl { bottom: 16px; left: 16px;  border-width: 0 0 3px 3px; }
+.pixel-corner.br { bottom: 16px; right: 16px; border-width: 0 3px 3px 0; }
+
+#title-screen {
+  position: fixed; inset: 0; background: #060810;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 500; cursor: pointer;
+  opacity: 1; visibility: visible; transition: opacity 0.7s ease;
+}
+#title-screen.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
+.title-inner { display: flex; flex-direction: column; align-items: center; gap: 32px; }
+#title-cursor {
+  font-family: 'Press Start 2P', monospace; font-size: clamp(18px, 3vw, 28px);
+  color: var(--lamp-amber); -webkit-font-smoothing: none; font-smooth: never;
+  text-shadow: 0 0 16px rgba(245,200,66,0.9), 0 0 32px rgba(245,200,66,0.4);
+  animation: cursor-blink 0.7s step-end infinite;
+}
+#flash-screen {
+  position: fixed; inset: 0; background: #fff;
+  z-index: 600; display: none; pointer-events: none;
+}
+#flash-screen.flash-active {
+  display: block; animation: flash-anim 2.2s ease-out forwards;
+}
+@keyframes flash-anim {
+  0%   { opacity: 1; }
+  15%  { opacity: 0.75; }
+  40%  { opacity: 0.35; }
+  100% { opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════════
+   GAME SCREEN（游戏主界面，初始隐藏）
+   调性延续序章：深蓝夜色 + 琥珀金点缀
+═══════════════════════════════════════════════ */
+#game-screen {
+  position: fixed; inset: 0;
+  background: linear-gradient(180deg, #080c18 0%, #0d1228 60%, #111830 100%);
+  z-index: 150;
+  display: none;
+  overflow-y: auto;
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+  -webkit-font-smoothing: antialiased;
+  image-rendering: auto;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 28px 20px;
+}
+#game-screen.show { display: flex; }
+
+/* 游戏内容容器 */
+#game-inner {
+  width: 100%;
+  max-width: 720px;
+  color: #d8cfc0;
+}
+
+/* ── 状态面板 ── */
+#status-panel {
+  background: rgba(13,18,40,0.7);
+  border: 1px solid rgba(245,200,66,0.12);
+  border-radius: 4px; padding: 14px 18px; margin-bottom: 18px;
+}
+.status-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.status-row:last-child { margin-bottom: 0; }
+.stat-label { width: 72px; font-size: 0.8em; color: #a09880; flex-shrink: 0;
+  font-family: 'Noto Serif SC','SimSun',serif; letter-spacing: 0.05em; }
+.stat-bar-bg { flex: 1; height: 6px; background: rgba(255,255,255,0.07); border-radius: 0; overflow: hidden; }
+.stat-bar-fill { height: 100%; border-radius: 0; transition: width 0.6s ease; }
+.bar-perf   { background: rgba(245,200,66,0.55); }
+.bar-sanity { background: rgba(180,220,180,0.5); }
+.bar-rep    { background: rgba(160,200,240,0.5); }
+.bar-dep    { background: rgba(200,140,140,0.55); }
+.stat-val { width: 32px; text-align: right; font-size: 0.78em; color: #a09880; flex-shrink: 0; }
+.danger .stat-bar-fill { animation: pulse 1.2s infinite alternate; }
+@keyframes pulse { from { opacity: 1; } to { opacity: 0.35; } }
+.date-info { display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px; font-size: 0.78em; color: rgba(245,200,66,0.6);
+  font-family: 'Noto Serif SC','SimSun',serif; letter-spacing: 0.08em; }
+.glasses-count { color: rgba(245,200,66,0.45); font-size: 0.82em; letter-spacing: 0.05em; }
+
+/* ── 叙事框 ── */
+#narrative-box {
+  background: rgba(13,18,40,0.5); border: 1px solid rgba(245,200,66,0.08);
+  border-radius: 4px; padding: 20px 22px; margin-bottom: 18px;
+  min-height: 100px; font-size: 0.92em; line-height: 2.1; color: #c8c0b0;
+  font-family: 'Noto Serif SC','SimSun',serif;
+}
+.npc-line { margin: 4px 0; padding-left: 0; font-family: 'Noto Serif SC','SimSun',serif; }
+.npc-leader   { color: #c0604a; }
+.npc-colleague{ color: #b08050; }
+.npc-mentor   { color: #7090b0; }
+.npc-narrator { color: #787060; font-style: italic; }
+.npc-self     { color: #d8cfc0; }
+.highlight    { color: rgba(245,200,66,0.9); }
+.bad-news     { color: #c05040; }
+.good-news    { color: #80b080; }
+
+/* ── 突发事件区 ── */
+#event-section {
+  background: rgba(13,18,40,0.5); border: 1px solid rgba(245,200,66,0.14);
+  border-radius: 4px; padding: 18px 20px; margin-bottom: 18px;
+}
+#event-section h3 { font-size: 0.8em; color: rgba(245,200,66,0.7); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Noto Serif SC','SimSun',serif; letter-spacing: 0.1em; }
+#event-desc { font-size: 0.88em; color: #c0b8a8; line-height: 2; margin-bottom: 14px;
+  font-family: 'Noto Serif SC','SimSun',serif; }
+
+/* ── 行动区 ── */
+#action-section h3 { font-size: 0.78em; color: #706858; margin-bottom: 12px;
+  font-family: 'Noto Serif SC','SimSun',serif; letter-spacing: 0.1em; }
+.action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.action-btn {
+  background: rgba(13,18,40,0.6); border: 1px solid rgba(245,200,66,0.1);
+  color: #b8b0a0; padding: 10px 14px; border-radius: 2px; cursor: pointer;
+  font-family: 'Noto Serif SC','SimSun',serif; font-size: 0.84em;
+  line-height: 1.6; text-align: left; transition: all 0.18s;
+}
+.action-btn:hover { background: rgba(245,200,66,0.07); border-color: rgba(245,200,66,0.25); color: #e0d8c8; }
+.action-btn.selected { background: rgba(245,200,66,0.1); border-color: rgba(245,200,66,0.4); color: #f0e8d0; }
+.action-btn .action-effect { font-size: 0.76em; color: #605850; margin-top: 4px; }
+
+/* ── 眼镜开关 ── */
+#glasses-section { margin-bottom: 16px; }
+.glasses-toggle-row {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(13,18,40,0.6); border: 1px solid rgba(245,200,66,0.1);
+  border-radius: 2px; padding: 12px 16px; cursor: pointer; transition: all 0.18s;
+}
+.glasses-toggle-row:hover { border-color: rgba(245,200,66,0.22); background: rgba(245,200,66,0.05); }
+.glasses-toggle-row.active { background: rgba(245,200,66,0.08); border-color: rgba(245,200,66,0.35); }
+.glasses-icon { font-size: 1.1em; opacity: 0.7; }
+.glasses-text { flex: 1; font-size: 0.86em; font-family: 'Noto Serif SC','SimSun',serif;
+  color: #b0a890; }
+.glasses-text small { display: block; color: #605850; font-size: 0.8em; margin-top: 3px; }
+.toggle-indicator { width: 32px; height: 18px; background: rgba(255,255,255,0.07);
+  border-radius: 0; position: relative; transition: background 0.2s;
+  border: 1px solid rgba(255,255,255,0.1); }
+.toggle-indicator::after { content: ''; position: absolute; top: 2px; left: 2px;
+  width: 12px; height: 12px; background: #504840; border-radius: 0; transition: all 0.2s; }
+.glasses-toggle-row.active .toggle-indicator { background: rgba(245,200,66,0.2);
+  border-color: rgba(245,200,66,0.4); }
+.glasses-toggle-row.active .toggle-indicator::after { left: 16px; background: rgba(245,200,66,0.85); }
+
+/* ── 确认按钮 ── */
+.btn-confirm {
+  width: 100%; padding: 13px; font-size: 0.88em; border-radius: 2px; margin-top: 4px;
+  background: transparent;
+  color: rgba(245,200,66,0.55); border: 1px solid rgba(245,200,66,0.2); cursor: pointer;
+  font-family: 'Noto Serif SC','SimSun',serif; letter-spacing: 0.15em;
+  transition: all 0.2s;
+}
+.btn-confirm:hover:not(:disabled) { background: rgba(245,200,66,0.07);
+  border-color: rgba(245,200,66,0.45); color: rgba(245,200,66,0.85); }
+.btn-confirm:disabled { opacity: 0.25; cursor: not-allowed; }
+
+/* ── 结局界面 ── */
+#result-screen {
+  display: none; text-align: center; padding: 48px 20px;
+  font-family: 'Noto Serif SC','SimSun',serif;
+}
+#result-screen.show { display: block; }
+#result-screen h2 { font-size: 1.5em; margin-bottom: 8px; color: #d8cfc0; letter-spacing: 0.08em; }
+.result-tag { font-size: 0.75em; padding: 3px 12px; border-radius: 0;
+  display: inline-block; margin-bottom: 24px; letter-spacing: 0.12em; }
+.tag-bad    { background: rgba(180,60,50,0.15);  color: #c06050;
+  border: 1px solid rgba(180,60,50,0.25); }
+.tag-normal { background: rgba(100,130,160,0.15); color: #8090a8;
+  border: 1px solid rgba(100,130,160,0.25); }
+.tag-good   { background: rgba(80,150,100,0.15);  color: #70a880;
+  border: 1px solid rgba(80,150,100,0.25); }
+.result-text { background: rgba(13,18,40,0.5); border: 1px solid rgba(245,200,66,0.08);
+  border-radius: 4px; padding: 22px 26px; text-align: left;
+  font-size: 0.9em; line-height: 2.2; color: #b8b0a0; margin-bottom: 28px; }
+.stats-summary { display: flex; gap: 14px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; }
+.stat-chip { background: rgba(13,18,40,0.5); border: 1px solid rgba(245,200,66,0.1);
+  border-radius: 2px; padding: 7px 14px; font-size: 0.78em; color: #807870; }
+.stat-chip span { color: #c8c0b0; }
+.btn-restart {
+  background: transparent; color: rgba(245,200,66,0.5);
+  border: 1px solid rgba(245,200,66,0.2); padding: 12px 40px; font-size: 0.88em;
+  border-radius: 2px; cursor: pointer;
+  font-family: 'Noto Serif SC','SimSun',serif; letter-spacing: 0.15em;
+  transition: all 0.2s;
+}
+.btn-restart:hover { background: rgba(245,200,66,0.07); border-color: rgba(245,200,66,0.4);
+  color: rgba(245,200,66,0.85); }
+
+.game-divider { border: none; border-top: 1px solid rgba(245,200,66,0.06); margin: 16px 0; }
+.g-fade-in { animation: gFadeIn 0.6s ease; }
+@keyframes gFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.hidden-g { display: none !important; }
+</style>
 </head>
 <body>
 
@@ -27,61 +395,28 @@
 
 <!-- ══ 场景 ══ -->
 <div id="scene">
-
   <div class="stars" id="stars"></div>
-
-  <!-- 左侧路灯 -->
   <div class="lamp-wrap" id="lamp-left">
-    <div class="lamp-arm">
-      <div class="lamp-head"></div>
-      <div class="lamp-cone"></div>
-    </div>
+    <div class="lamp-arm"><div class="lamp-head"></div><div class="lamp-cone"></div></div>
     <div class="lamp-pole"></div>
   </div>
-
-  <!-- 右侧路灯 -->
   <div class="lamp-wrap" id="lamp-right">
-    <div class="lamp-arm">
-      <div class="lamp-head"></div>
-      <div class="lamp-cone"></div>
-    </div>
+    <div class="lamp-arm"><div class="lamp-head"></div><div class="lamp-cone"></div></div>
     <div class="lamp-pole"></div>
   </div>
-
-  <!-- 远处树木 -->
-  <div class="tree" style="left:5%">
-    <div class="tree-top" style="width:50px;height:80px;"></div>
-    <div class="tree-trunk" style="height:30px;"></div>
-  </div>
-  <div class="tree" style="left:18%">
-    <div class="tree-top" style="width:38px;height:60px;"></div>
-    <div class="tree-trunk" style="height:20px;"></div>
-  </div>
-  <div class="tree" style="right:5%">
-    <div class="tree-top" style="width:55px;height:90px;"></div>
-    <div class="tree-trunk" style="height:35px;"></div>
-  </div>
-  <div class="tree" style="right:16%">
-    <div class="tree-top" style="width:40px;height:65px;"></div>
-    <div class="tree-trunk" style="height:22px;"></div>
-  </div>
-
-  <!-- 公园长椅 -->
+  <div class="tree" style="left:5%"><div class="tree-top" style="width:50px;height:80px;"></div><div class="tree-trunk" style="height:30px;"></div></div>
+  <div class="tree" style="left:18%"><div class="tree-top" style="width:38px;height:60px;"></div><div class="tree-trunk" style="height:20px;"></div></div>
+  <div class="tree" style="right:5%"><div class="tree-top" style="width:55px;height:90px;"></div><div class="tree-trunk" style="height:35px;"></div></div>
+  <div class="tree" style="right:16%"><div class="tree-top" style="width:40px;height:65px;"></div><div class="tree-trunk" style="height:22px;"></div></div>
   <div id="bench">
-    <div class="bench-back">
-      <div class="bench-plank" style="width:160px;"></div>
-    </div>
-    <div class="bench-seat">
-      <div class="bench-plank" style="width:160px;"></div>
-    </div>
+    <div class="bench-back"><div class="bench-plank" style="width:160px;"></div></div>
+    <div class="bench-seat"><div class="bench-plank" style="width:160px;"></div></div>
     <div style="display:flex;justify-content:space-between;width:160px;margin-top:2px;">
       <div class="bench-leg" style="height:28px;"></div>
       <div class="bench-leg" style="height:28px;"></div>
     </div>
     <div class="bench-support"></div>
   </div>
-
-  <!-- 自动售卖机 -->
   <div id="vending">
     <div class="vend-body">
       <div class="vend-brand">DRINKS</div>
@@ -101,9 +436,7 @@
     </div>
     <div class="vend-base"></div>
   </div>
-
   <div id="ground"></div>
-
 </div>
 
 <!-- ══ 蒙版对话层 ══ -->
@@ -120,6 +453,1020 @@
 <!-- ══ 结束画面（不是的分支） ══ -->
 <div id="end-text"></div>
 
-<script src="main.js"></script>
+<!-- ══════════════════════════════════════════════
+     GAME SCREEN（主游戏界面，接在序章之后）
+══════════════════════════════════════════════ -->
+<div id="game-screen">
+  <div id="game-inner">
+
+    <!-- 状态面板 -->
+    <div id="status-panel">
+      <div class="date-info">
+        <span id="date-display">三月一日 · 周一 · 第1天</span>
+        <span class="glasses-count">眼镜 <span id="glasses-used-count">0</span> 次</span>
+      </div>
+      <div class="status-row" id="row-perf">
+        <div class="stat-label">业绩</div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill bar-perf" id="bar-perf" style="width:50%"></div></div>
+        <div class="stat-val" id="val-perf">50</div>
+      </div>
+      <div class="status-row" id="row-sanity">
+        <div class="stat-label">心态</div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill bar-sanity" id="bar-sanity" style="width:60%"></div></div>
+        <div class="stat-val" id="val-sanity">60</div>
+      </div>
+      <div class="status-row" id="row-rep">
+        <div class="stat-label">声誉</div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill bar-rep" id="bar-rep" style="width:40%"></div></div>
+        <div class="stat-val" id="val-rep">40</div>
+      </div>
+      <div class="status-row" id="row-dep">
+        <div class="stat-label">依赖</div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill bar-dep" id="bar-dep" style="width:0%"></div></div>
+        <div class="stat-val" id="val-dep">0</div>
+      </div>
+    </div>
+
+    <!-- 叙事框 -->
+    <div id="narrative-box" class="g-fade-in"></div>
+
+    <!-- 突发事件区 -->
+    <div id="event-section" class="hidden-g">
+      <h3 id="event-title-h3">── 突发事件</h3>
+      <div id="event-desc"></div>
+      <div id="event-choices" class="action-grid"></div>
+    </div>
+
+    <!-- 行动区 -->
+    <div id="action-section">
+      <h3 id="action-title">今天的行动</h3>
+      <div id="action-choices" class="action-grid"></div>
+    </div>
+
+    <hr class="game-divider">
+
+    <!-- 眼镜开关 -->
+    <div id="glasses-section">
+      <div class="glasses-toggle-row" id="glasses-toggle" onclick="toggleGlasses()">
+        <span class="glasses-icon">👓</span>
+        <div class="glasses-text">
+          今天戴上眼镜
+          <small id="glasses-hint">表现会不一样</small>
+        </div>
+        <div class="toggle-indicator"></div>
+      </div>
+    </div>
+
+    <!-- 确认按钮 -->
+    <button class="btn-confirm" id="confirm-btn" onclick="confirmAction()" disabled>确认</button>
+
+    <!-- 结局界面（嵌在 game-inner 内） -->
+    <div id="result-screen">
+      <h2 id="result-title"></h2>
+      <div id="result-tag-container"></div>
+      <div class="result-text" id="result-text"></div>
+      <div class="stats-summary" id="result-stats"></div>
+      <button class="btn-restart" onclick="restartToTitle()">重新开始</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   星星生成
+══════════════════════════════════════ */
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 120; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() < 0.15 ? 3 : Math.random() < 0.4 ? 2 : 1;
+  s.style.cssText = `
+    width:${size}px; height:${size}px;
+    top:${Math.random() * 65}%;
+    left:${Math.random() * 100}%;
+    --d:${(2 + Math.random() * 4).toFixed(1)}s;
+    --a1:${(0.1 + Math.random() * 0.3).toFixed(2)};
+    --a2:${(0.6 + Math.random() * 0.4).toFixed(2)};
+    animation-delay:${(Math.random() * 4).toFixed(1)}s;
+  `;
+  starsEl.appendChild(s);
+}
+
+/* ══════════════════════════════════════
+   Web Audio（柔和正弦波）
+══════════════════════════════════════ */
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playTypeSound() {
+  try {
+    const ctx  = getAudioCtx();
+    const freq = 320 + Math.random() * 80;
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const lpf  = ctx.createBiquadFilter();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(freq * 0.75, ctx.currentTime + 0.08);
+    lpf.type = 'lowpass'; lpf.frequency.value = 900;
+    gain.gain.setValueAtTime(0.055, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.12);
+    osc.connect(lpf); lpf.connect(gain); gain.connect(ctx.destination);
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.13);
+  } catch (e) {}
+}
+
+/* ══════════════════════════════════════
+   开场界面
+══════════════════════════════════════ */
+const titleScreen = document.getElementById('title-screen');
+const overlay     = document.getElementById('overlay');
+overlay.classList.add('hidden');
+
+function startIntro() {
+  getAudioCtx().resume();
+  playTypeSound();
+  overlay.classList.remove('hidden');
+  titleScreen.classList.add('fade-out');
+  setTimeout(() => { beginDialog(); }, 700);
+}
+titleScreen.addEventListener('click', startIntro, { once: true });
+document.addEventListener('keydown', () => {
+  if (titleScreen.classList.contains('fade-out')) return;
+  startIntro();
+}, { once: true });
+
+/* ══════════════════════════════════════
+   打字机核心
+══════════════════════════════════════ */
+const textEl    = document.getElementById('overlay-text');
+const choicesEl = document.getElementById('choices');
+const endEl     = document.getElementById('end-text');
+let typingTimer = null;
+
+function parseSegments(line) {
+  const segs = []; const re = /\{PAUSE:(\d+)\}/g;
+  let last = 0, m;
+  while ((m = re.exec(line)) !== null) {
+    if (m.index > last) segs.push({ text: line.slice(last, m.index) });
+    segs.push({ pause: parseInt(m[1]) });
+    last = m.index + m[0].length;
+  }
+  if (last < line.length) segs.push({ text: line.slice(last) });
+  return segs;
+}
+
+function typeTextInto(container, lines, onDone) {
+  container.innerHTML = '';
+  if (typingTimer) { clearTimeout(typingTimer); typingTimer = null; }
+  const lineEls = lines.map(line => {
+    const isBlankLine = line === '';
+    const isFullPause = /^\{PAUSE:(\d+)\}$/.test(line);
+    const p = document.createElement('p');
+    p.className = 'dialog-line';
+    if (isBlankLine || isFullPause) {
+      p.innerHTML = '&nbsp;'; p.style.minHeight = '0';
+      p.style.height = isFullPause ? '0' : '0.5em';
+      p.style.overflow = 'hidden';
+    }
+    container.appendChild(p);
+    return {
+      el: p, segments: (isBlankLine || isFullPause) ? [] : parseSegments(line),
+      fullPause: isFullPause ? parseInt(line.match(/\d+/)[0]) : 0,
+      isEmpty: isBlankLine,
+    };
+  });
+  const cursor = document.createElement('span');
+  cursor.className = 'type-cursor'; cursor.textContent = '█';
+  let lineIdx = 0, segIdx = 0, charIdx = 0;
+
+  function tick() {
+    while (lineIdx < lineEls.length && lineEls[lineIdx].isEmpty) lineIdx++;
+    if (lineIdx >= lineEls.length) {
+      const lastReal = [...lineEls].reverse().find(l => !l.isEmpty && l.segments.length > 0);
+      if (lastReal) lastReal.el.appendChild(cursor);
+      if (onDone) onDone(); return;
+    }
+    const entry = lineEls[lineIdx];
+    if (entry.fullPause > 0) {
+      lineIdx++; segIdx = 0; charIdx = 0;
+      typingTimer = setTimeout(tick, entry.fullPause); return;
+    }
+    const segs = entry.segments;
+    if (segIdx === 0 && charIdx === 0) entry.el.appendChild(cursor);
+    while (segIdx < segs.length && segs[segIdx].pause !== undefined) {
+      const ms = segs[segIdx].pause; segIdx++;
+      typingTimer = setTimeout(tick, ms); return;
+    }
+    if (segIdx >= segs.length) {
+      lineIdx++; segIdx = 0; charIdx = 0;
+      typingTimer = setTimeout(tick, 120); return;
+    }
+    const seg = segs[segIdx]; const text = seg.text;
+    if (charIdx < text.length) {
+      entry.el.insertBefore(document.createTextNode(text[charIdx]), cursor);
+      charIdx++; playTypeSound();
+      const ch = text[charIdx - 1];
+      let delay;
+      if      (/[。！？]/.test(ch)) delay = 420 + Math.random() * 80;
+      else if (/[，、…]/.test(ch))  delay = 220 + Math.random() * 60;
+      else if (/[～~]/.test(ch))    delay = 160;
+      else                           delay = 95  + Math.random() * 40;
+      typingTimer = setTimeout(tick, delay);
+    } else { segIdx++; charIdx = 0; tick(); }
+  }
+  tick();
+}
+
+function typeText(lines, onDone) { typeTextInto(textEl, lines, onDone); }
+
+function showChoices(options) {
+  choicesEl.innerHTML = ''; choicesEl.classList.remove('visible');
+  setTimeout(() => {
+    options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.innerHTML = `<span class="choice-arrow">▶</span>${opt.label}`;
+      btn.style.animationDelay = `${i * 140}ms`;
+      btn.onclick = opt.action; choicesEl.appendChild(btn);
+    });
+    choicesEl.classList.add('visible');
+  }, 350);
+}
+
+function setScene(lines, options) {
+  choicesEl.innerHTML = ''; choicesEl.classList.remove('visible');
+  typeText(lines, () => showChoices(options));
+}
+
+/* ══════════════════════════════════════
+   对话流程
+══════════════════════════════════════ */
+function beginDialog() {
+  setScene(
+    ['很荣幸见到您。'],
+    [
+      { label: '我也是',  action: () => setScene(['工作很辛苦吗？{PAUSE:400}累了吗？'], [{ label: '是的', action: onYes }, { label: '不是', action: onNo }]) },
+      { label: '……',      action: () => setScene(['工作很辛苦吗？{PAUSE:400}累了吗？'], [{ label: '是的', action: onYes }, { label: '不是', action: onNo }]) },
+    ]
+  );
+}
+
+const flashEl = document.getElementById('flash-screen');
+
+function playFlashSound() {
+  try { const audio = new Audio('611113__5ro4__bell-ding-1.wav'); audio.play(); } catch (e) {}
+}
+
+function giveGift() {
+  choicesEl.innerHTML = ''; choicesEl.classList.remove('visible');
+  typeText(['我明白了。', '{PAUSE:900}', '', '那么，请务必收下这个。'], () => {
+    setTimeout(() => {
+      // 蒙版收起，露出公园场景
+      overlay.style.transition = 'clip-path 1.6s cubic-bezier(0.4,0,0.2,1), opacity 1.6s ease';
+      overlay.style.clipPath   = 'circle(0% at 50% 50%)';
+      overlay.style.opacity    = '0';
+
+      setTimeout(() => {
+        overlay.style.transition = '';
+        overlay.style.clipPath   = '';
+        overlay.style.opacity    = '';
+        overlay.classList.add('hidden');
+      }, 1650);
+
+      // 蒙版收完后进入戴眼镜剧情（闪光在"戴上"那一刻触发）
+      setTimeout(() => {
+        startGlassesExperience();
+      }, 1800);
+
+    }, 900);
+  });
+}
+
+/* ══════════════════════════════════════════════════
+   戴上眼镜——体验剧情
+══════════════════════════════════════════════════ */
+function startGlassesExperience() {
+  // 恢复 overlay 到 DOM（去掉 hidden），保持透明，使打字机和选项可用
+  overlay.classList.remove('hidden');
+  overlay.style.background = 'transparent';
+
+  // 清空选项区，重新开始打字
+  choicesEl.innerHTML = '';
+  choicesEl.classList.remove('visible');
+  textEl.innerHTML = '';
+
+  typeText(
+    [
+      '从对面的那双手上递来一副眼镜。',
+      '{PAUSE:600}',
+      '你把它拿在手里，翻来覆去看了看。',
+      '{PAUSE:600}',
+      '普通的金属镜架，普通的镜片，看起来没什么特别之处。',
+      '{PAUSE:800}',
+      '',
+    ],
+    () => {
+      // 显示单一选项，让玩家主动选择戴上眼镜
+      showChoices([{ label: '戴上眼镜', action: () => {
+        // 戴上眼镜的瞬间——清空旧文字，触发闪光
+        textEl.innerHTML = '';
+        choicesEl.innerHTML = '';
+        choicesEl.classList.remove('visible');
+        flashEl.classList.add('flash-active');
+        playFlashSound();
+        setTimeout(() => {
+          flashEl.classList.remove('flash-active');
+        }, 2200);
+
+        // 闪光渐退期间继续叙事
+        setTimeout(() => {
+          typeText(
+          [
+            '世界没有发生任何戏剧性的变化。',
+            '{PAUSE:500}',
+            '公园还是那个公园，路灯还是那盏路灯，',
+            '{PAUSE:400}',
+            '风还是从左边吹过来的。',
+            '{PAUSE:1000}',
+            '',
+            '然后你忽然意识到——',
+            '{PAUSE:700}',
+            '你的脑子里，有什么东西开始转动了。',
+            '{PAUSE:900}',
+          ],
+          () => {
+            typeText(
+              [
+                '不是魔法，不是超能力。',
+                '{PAUSE:500}',
+                '更像是某个一直在你脑子里沉默的东西，',
+                '{PAUSE:600}',
+                '突然翻涌起来。',
+                '{PAUSE:1200}',
+                '',
+                '你想到了上周那个搁置的提案，',
+                '{PAUSE:400}',
+                '领导皱眉时的表情，',
+                '{PAUSE:400}',
+                '如果是现在的话，说不定……',
+                '{PAUSE:1000}',
+                '',
+                '那种感觉……',
+              ],
+              () => {
+                showChoices([
+                  {
+                    label: '好像找回了什么。',
+                    action: () => glassesExperienceReact('found'),
+                  },
+                  {
+                    label: '好像失去了什么。',
+                    action: () => glassesExperienceReact('lost'),
+                  },
+                  {
+                    label: '说不清楚。',
+                    action: () => glassesExperienceReact('unclear'),
+                  },
+                ]);
+              }
+            );
+          }
+        );
+        }, 900); // setTimeout — 闪光渐退后继续叙事
+      }}]); // action end, showChoices end
+    }
+  );
+}
+
+function glassesExperienceReact(choice) {
+  choicesEl.innerHTML = '';
+  choicesEl.classList.remove('visible');
+
+  let lines;
+  if (choice === 'found') {
+    lines = [
+      '是吗。',
+      '{PAUSE:700}',
+      '',
+      '也许你是对的。',
+      '{PAUSE:600}',
+      '也许那个东西一直都在，只是需要一点……帮助。',
+      '{PAUSE:1100}',
+      '',
+      '不过，找回来的东西，',
+      '{PAUSE:500}',
+      '和本来就有的东西，',
+      '{PAUSE:500}',
+      '是一样的吗？',
+      '{PAUSE:1400}',
+    ];
+  } else if (choice === 'lost') {
+    lines = [
+      '是吗。',
+      '{PAUSE:700}',
+      '',
+      '……那倒是一个有意思的回答。',
+      '{PAUSE:900}',
+      '抗拒吗？',
+      '{PAUSE:500}',
+      '还是说，不适应吗？',
+      '{PAUSE:1100}',
+      '',
+      '你似乎对它足够警惕。',
+      '{PAUSE:1000}',
+      '这也许并不是坏事。',
+      '{PAUSE:1400}',
+    ];
+  } else {
+    lines = [
+      '至少现在，你给不出答案。',
+      '{PAUSE:800}',
+      '',
+      '这副眼镜安安静静地架在你的鼻梁上。',
+      '{PAUSE:700}',
+      '仿佛它原本就属于这里。',
+      '{PAUSE:1100}',
+      '',
+      '三个月之后，',
+      '{PAUSE:500}',
+      '也许你就说得清楚了。',
+      '{PAUSE:1400}',
+    ];
+  }
+
+  typeText(lines, () => {
+    typeText(
+      [ '', '{PAUSE:600}' ],
+      () => {
+        showChoices([{ label: '摘下眼镜', action: () => {
+          choicesEl.innerHTML = '';
+          choicesEl.classList.remove('visible');
+          typeText(
+            [
+              '你摘下眼镜，放进口袋。',
+              '{PAUSE:700}',
+              '',
+              '明天，又要上班了。',
+              '{PAUSE:1800}',
+            ],
+            () => {
+              setTimeout(() => {
+                // 剧情结束，隐藏 overlay 再进入游戏
+                overlay.style.background = '';
+                overlay.classList.add('hidden');
+                enterGame();
+              }, 600);
+            }
+          );
+        }}]);
+      }
+    );
+  });
+}
+
+function onYes() { giveGift(); }
+
+/* ── 不是 → 结束画面 ── */
+function onNo() {
+  endEl.innerHTML = `
+    <div class="deco-line"></div>
+    <div id="end-dialog"></div>
+    <div id="end-choices" class="choices"></div>
+    <div class="deco-line"></div>
+  `;
+  endEl.classList.add('show');
+  overlay.classList.add('hidden');
+  const endDialogEl  = document.getElementById('end-dialog');
+  const endChoicesEl = document.getElementById('end-choices');
+  typeTextInto(
+    endDialogEl,
+    ['是吗……真是遗憾，那么我就先告辞了。', '{PAUSE:500}', '', '请您保重。以后，肯定还会再见的。'],
+    () => {
+      setTimeout(() => {
+        [
+          { label: '等等！',   action: onWait    },
+          { label: '再见。',   action: closePage },
+        ].forEach((opt, i) => {
+          const btn = document.createElement('button');
+          btn.className = 'choice-btn';
+          btn.innerHTML = `<span class="choice-arrow">▶</span>${opt.label}`;
+          btn.style.animationDelay = `${i * 140}ms`;
+          btn.onclick = opt.action; endChoicesEl.appendChild(btn);
+        });
+        endChoicesEl.classList.add('visible');
+      }, 350);
+    }
+  );
+}
+
+function onWait() {
+  endEl.classList.remove('show');
+  overlay.classList.remove('hidden');
+  setScene(
+    ['请问还有什么我能帮您的吗？'],
+    [
+      { label: '果然还是……',        action: giveGift  },
+      { label: '不，没什么，再见。', action: closePage },
+    ]
+  );
+}
+
+function closePage() {
+  document.body.style.transition = 'opacity 0.8s ease';
+  document.body.style.opacity    = '0';
+  setTimeout(() => window.close(), 900);
+}
+
+/* ══════════════════════════════════════════════════
+   过渡动画：夜晚公园 → 游戏界面
+   scene 慢慢变暗，game-screen 叠入
+══════════════════════════════════════════════════ */
+function enterGame() {
+  const scene = document.getElementById('scene');
+  const gameScreen = document.getElementById('game-screen');
+
+  // scene 渐暗
+  scene.style.transition = 'opacity 1.2s ease';
+  scene.style.opacity = '0';
+
+  // game-screen 渐入（用一个小技巧：先设置opacity:0再display:flex再渐变）
+  gameScreen.style.opacity = '0';
+  gameScreen.classList.add('show');
+  // 强制 reflow 后再开始渐入
+  void gameScreen.offsetWidth;
+  gameScreen.style.transition = 'opacity 1.2s ease';
+  gameScreen.style.opacity = '1';
+
+  setTimeout(() => {
+    initGameState();
+    renderStatusBars();
+    setNarrative(buildDayNarrative());
+    renderActions();
+    updateConfirmBtn();
+  }, 400);
+}
+
+/* ══════════════════════════════════════════════════
+   重新开始 → 回到开场
+══════════════════════════════════════════════════ */
+function restartToTitle() {
+  const scene = document.getElementById('scene');
+  const gameScreen = document.getElementById('game-screen');
+
+  // 隐藏游戏，重置结局
+  document.getElementById('result-screen').classList.remove('show');
+  // 游戏界面渐出
+  gameScreen.style.transition = 'opacity 0.8s ease';
+  gameScreen.style.opacity = '0';
+  setTimeout(() => {
+    gameScreen.classList.remove('show');
+    gameScreen.style.transition = '';
+    gameScreen.style.opacity = '';
+    // 场景重新显示
+    scene.style.transition = 'opacity 0.8s ease';
+    scene.style.opacity = '1';
+    // 重置 overlay
+    overlay.style.clipPath = '';
+    overlay.style.opacity  = '';
+    overlay.classList.remove('hidden');
+    // 重新开始对话
+    setTimeout(() => {
+      scene.style.transition = '';
+      beginDialog();
+    }, 200);
+  }, 850);
+}
+
+/* ═══════════════════════════════════════════════════
+   ██████████  GAME LOGIC  ██████████
+═══════════════════════════════════════════════════ */
+
+const DAYS_TOTAL = 90;
+
+const WEEKDAY_ACTIONS = [
+  { id:'wk_normal', label:'正常完成任务', effect:'完成日常设计工作，勉勉强强，但没什么亮点。',
+    perf:+2, sanity:-1, rep:0, glassPerf:+8, glassSanity:0, glassRep:+2,
+    normalText:'你打开PS，对着参考图挤出方案，一如既往。领导没夸也没批，工资照发。你盯着屏幕发了一会儿呆，然后把窗口最小化，去倒了杯水。',
+    glassText:'眼镜的加持让思路异常清晰，配色一气呵成，连你自己都觉得惊艳。同事走过来问了句"这个用了什么参考"，你说"没什么，随手做的"，然后把眼镜往鼻梁上推了推。' },
+  { id:'wk_overtime', label:'主动加班', effect:'提交额外工作量，业绩提升但心态受损。',
+    perf:+5, sanity:-5, rep:+1, glassPerf:+12, glassSanity:-2, glassRep:+3,
+    normalText:'你又一次是最后一个关电脑的人。楼下便利店的收银员已经认识你，会主动帮你加热包子。你有时候觉得，你和他聊的话，比跟很多同事都多。',
+    glassText:'戴着眼镜加班效率翻倍，一晚上的产出足以在周会上撑起你的数字。但地铁末班车上，你盯着黑色玻璃里自己的脸发了很久的呆——那副眼镜摘了，你感觉自己少了点什么。' },
+  { id:'wk_study', label:'花时间自学', effect:'提升真实能力，短期业绩无变化但声誉慢慢积累。',
+    perf:-1, sanity:+2, rep:+3, glassPerf:-1, glassSanity:+2, glassRep:+3,
+    normalText:'午休时间刷了一套新教程，做了点笔记。不知道什么时候能用上，但总比什么都不做好。你合上笔记本，重新打开工作文件。',
+    glassText:'戴着眼镜学习，概念消化飞快，笔记记了满满几页。但摘下来翻看，总感觉那些字是别人写的。' },
+  { id:'wk_low', label:'摸鱼低调过一天', effect:'保存心态，但业绩下滑。',
+    perf:-3, sanity:+4, rep:0, glassPerf:+3, glassSanity:+4, glassRep:0,
+    normalText:'你假装在改稿，实际上刷了两小时短视频。心情好多了，活没干完。截止日还有两天，先这样吧。',
+    glassText:'眼镜让你在摸鱼之余顺手把几个遗留问题处理了，领导那边也看不出你实际上今天没怎么用力。完美掩护。但你总觉得这样用……有点对不起它，也对不起自己。' },
+];
+
+const WEEKEND_ACTIONS = [
+  { id:'we_rest', label:'在家休息', effect:'彻底放空，心态大幅恢复。',
+    perf:0, sanity:+10, rep:0, glassPerf:0, glassSanity:+10, glassRep:0,
+    normalText:'睡到自然醒，点了外卖，看了一部搁置很久的电影。手机消息静音，一条都没回。这种时间越来越少，就越来越值得认真对待。',
+    glassText:'你把眼镜放到抽屉里，休息了一整天。快睡着的时候脑子冒出一个念头，然后你把它压下去，继续睡。' },
+  { id:'we_overtime', label:'周末加班', effect:'业绩大幅提升，心态受损，声誉微增。',
+    perf:+8, sanity:-8, rep:+2, glassPerf:+18, glassSanity:-4, glassRep:+5,
+    normalText:'周末还是来公司了。你跟保安大叔相视一笑，已经不需要说话了。空旷的办公室，只有空调的声音，没人来找你，一整天。',
+    glassText:'戴着眼镜整个周末高效产出，周一领导一上班就在群里发来了赞。但你盯着那条消息很久，想到的第一件事是：下次没戴眼镜，我还能交出这个水准的东西吗？' },
+  { id:'we_hobby', label:'做自己的设计', effect:'心态好，声誉小幅提升，磨练真实技艺。',
+    perf:0, sanity:+6, rep:+4, glassPerf:0, glassSanity:+6, glassRep:+2,
+    normalText:'你打开了那个搁置了一年半的私人项目。没有甲方，没有需求文档，没有截止日期，也没有领导的眼神。你做了一些很小的、很自己的东西。做完之后感觉人还在。',
+    glassText:'戴着眼镜做自己的东西，出来的成品精准漂亮，比你平时强太多。但你看着屏幕，有点说不清楚的失落——这个，是你的风格吗？还是眼镜的？你分不清了。' },
+  { id:'we_social', label:'出去和朋友玩', effect:'心态大幅提升，短暂脱离职场。',
+    perf:0, sanity:+12, rep:0, glassPerf:0, glassSanity:+12, glassRep:0,
+    normalText:'朋友说你最近看起来很累，你笑笑说"还行"。吃了顿火锅，他们聊了很多和工作无关的事，你发现你已经不太记得怎么说这些了——但今晚还是找回来了一点点。',
+    glassText:'你没戴眼镜出门。久违地当了几个小时的普通人，不需要表现，不需要输出。朋友问你最近公司怎么样，你说"还行"，然后把话题转开了。' },
+  { id:'we_learn', label:'报个周末培训班', effect:'声誉和能力长期积累，耗费精力。',
+    perf:0, sanity:-3, rep:+6, glassPerf:0, glassSanity:-3, glassRep:+4,
+    normalText:'培训班的老师讲得不错，你认真做了笔记。身边同学的眼神都有点像你——各有各的难处，各有各的盘算。大家一起低头抄，谁都没多问。这笔钱花得值。',
+    glassText:'眼镜让你消化课程内容轻而易举，课上的表现比旁边的人都好。但课后和同学一起讨论的时候，你摘下眼镜，发现自己其实什么都没真正内化——只是暂时理解了而已。' },
+];
+
+const EVENTS = [
+  { id:'pitch_fail', title:'提案翻车', week:[1,2],
+    desc:'领导突然把你叫进会议室，当着几个大客户的面，要求你现场讲解你上周交的提案。这种场面你见过，但今天你突然发现自己连自己写了什么都没理清楚。领导的眼神越来越冷，你知道这个客户很重要——公司正在缺单子的时候。',
+    choices:[
+      { label:'硬撑，尽量讲清楚', key:'no_glass', perf:-6, sanity:-8, rep:-3, dep:0,
+        text:'你磕磕绊绊地讲完了，客户没被说服，领导会后低声说："你做了两年了，这个状态不行。"但你没有倒下。你记下来了，下次不能这样。' },
+      { label:'戴上眼镜，临场发挥', key:'glass', perf:+5, sanity:+2, rep:+4, dep:+12,
+        text:'眼镜滑上鼻梁，你忽然口若悬河，把整个方案讲得条理清晰，客户频频点头。领导的表情松动了。散会后mentor把你拉到角落，小声说："……你今天哪来的这个状态？跟平时不一样。"' },
+    ]},
+  { id:'colleague_conflict', title:'同事抢功', week:[1,2,3],
+    desc:'你花了三天做的方案被同事在全组会议上当成"我们一起讨论的结果"提交了上去，领导当场表扬了他。你就坐在旁边，没人提你的名字。不是第一次了——但今年大家都在争表现，谁都想留下来。',
+    choices:[
+      { label:'忍了，私下找mentor聊', key:'no_glass', perf:0, sanity:-7, rep:0, dep:0,
+        text:'Mentor听完叹了口气："这种事……在这个时候，忍比闹强。注意留证据。"你心里堵着一口气，但你知道他说的是对的。现在不是正面冲突的时候。' },
+      { label:'当场说明情况（戴着眼镜）', key:'glass', perf:+2, sanity:-2, rep:+6, dep:+8,
+        text:'眼镜让你措辞得体、不卑不亢，你简短说明了设计细节，领导抬头看了你一眼："哦，是你做的？"同事脸色一变。你赢了这一局，但你知道他从此会更用心地挑你的毛病。' },
+    ]},
+  { id:'leader_review', title:'领导突击检查', week:[2,3,4,5,6],
+    desc:'领导拿着你最近几周的提交记录，坐到你工位旁边，沉默了几秒后开口："讲讲你的设计思路。"你知道这不是随便问问——行业不好做，他在评估每个人的价值。',
+    choices:[
+      { label:'据实回答，诚实说有些地方不确定', key:'no_glass', perf:-4, sanity:+2, rep:+3, dep:0,
+        text:'"我觉得配色参考了这个，但效果不太确定……"领导看了你一会儿，说："能说出自己不确定的地方，说明还在想。回去把这部分重做。"扣了业绩，但他没有失望地离开。' },
+      { label:'戴眼镜，侃侃而谈', key:'glass', perf:+4, sanity:0, rep:+2, dep:+10,
+        text:'你流利地拆解每一个设计决策，连用色心理学都信手拈来。领导沉默了更长时间，然后说："说得不错。"但他看你的眼神，比之前更锐利了——像是在确认他刚才听到的是不是真的你。' },
+    ]},
+  { id:'crunch_project', title:'紧急项目压下来', week:[2,3,4,5,6,7,8],
+    desc:'大客户临时要求三天内出一套完整VI方案，按理应该两周做的事。领导把任务直接甩给了你和同事。同事当场说："这不合理，这就是在逼人走。"然后被领导叫去单独谈话，出来后就直接收拾东西离职了。你独自坐在工位前，盯着需求文档，知道这件事现在全压在你身上。',
+    choices:[
+      { label:'咬牙硬做，靠自己', key:'no_glass', perf:+6, sanity:-12, rep:+4, dep:0,
+        text:'三天，几乎没睡，方案粗糙但交上去了。领导说"基本能用"，客户接受了。你感觉右眼皮在跳，但你撑过来了，而且那些东西是你做的，你站得住。' },
+      { label:'戴上眼镜全力冲刺', key:'glass', perf:+14, sanity:-4, rep:+7, dep:+15,
+        text:'眼镜让你进入一种近乎超人的状态，三天出了一套专业水准的VI。领导在全组会议上表扬了你，说"这才是老员工应有的担当"。但你盯着那份稿子，心里有个声音在问：没有眼镜，我还做得出来吗？' },
+    ]},
+  { id:'mentor_advice', title:'Mentor找你谈话', week:[2,3,4,5,6,7,8],
+    desc:'Mentor叫你去喝咖啡，欲言又止了半天，最后说："我想跟你说一件事，但不知道怎么开口。"他停了停，"你最近有些东西……我说不清楚，但感觉不太对。你还好吗？"',
+    choices:[
+      { label:'说没事，一笑而过', key:'no_glass', perf:0, sanity:0, rep:0, dep:0,
+        text:'"可能最近大环境压力大，状态有点波动。"你接过咖啡杯，把话题带走了。Mentor点了点头，眼神里有些你没读出来的东西——担心，或者遗憾，你分不清。' },
+      { label:'半开玩笑地说"我找到了一个神器"（戴着眼镜）', key:'glass', perf:0, sanity:+3, rep:-2, dep:+6,
+        text:'眼镜让你讲述得云淡风轻，mentor听完沉默了好一会儿，说："……你有没有想过，如果那个东西不在了，你怎么办？"你愣了一下，笑着说没事的。他没再说话，看着你的表情让你有点不安。' },
+    ]},
+  { id:'industry_talk', title:'行业交流会', week:[3,4,5,6,7],
+    desc:'公司难得送你去参加一个行业设计交流会。现场挤满了同样焦虑的设计师，大家都在看谁还活着、活得怎么样。问答环节主持人突然点你的名，问你对行业当前趋势的看法。全场安静，都在等你开口。',
+    choices:[
+      { label:'讲自己真实的感受', key:'no_glass', perf:0, sanity:+3, rep:+5, dep:0,
+        text:'你说了一些不够光鲜的实话——行业在收缩，但真正有沉淀的东西还是有市场的。台下反应平淡，但回来后有个设计师找到你，说"你说的那个点，我做了五年才想到，你才几年？"' },
+      { label:'戴上眼镜，给出一个完美回答', key:'glass', perf:0, sanity:-2, rep:+8, dep:+12,
+        text:'你出口成章，引经据典，台下响起掌声。会后有人来要名片，说"你讲得比很多做了十年的人清晰"。但走出会场，你摘掉眼镜，努力回忆刚才自己说了什么——什么都想不起来了。那些话，不是你的。' },
+    ]},
+  { id:'boss_private', title:'领导的私下质疑', week:[5,6,7,8,9,10,11,12],
+    desc:'领导把你叫到走廊上，没有录音，没有证人。他直视着你，声音压低了很多："你在这里做了两年，我记得你刚来的样子。你最近的输出……我有时候觉得很好，有时候又觉得完全是两个人做的。你在做什么？"',
+    choices:[
+      { label:'坦然回应："我在摸索，不稳定是真的"', key:'no_glass', perf:-2, sanity:-3, rep:+5, dep:0,
+        text:'领导沉默了很长时间。"不稳定就是不稳定。现在这个情况，我需要的是能站在成果背后的人，不是偶尔发挥好的人。"他转身离开，但你感觉他是在认真听的——他没有用这个否定你。' },
+      { label:'戴着眼镜，给出一套说辞', key:'glass', perf:0, sanity:-8, rep:0, dep:+14,
+        text:'眼镜让你的解释天衣无缝，逻辑完整，甚至反过来让领导觉得自己可能想多了。他离开时若有所思。但你站在走廊里发现，你刚才对他撒谎了，而且撒得那么流利，那么自然——你已经说不清楚什么是真的了。' },
+    ]},
+  { id:'colleague_breakdown', title:'同事的愤怒', week:[4,5,6,7,8,9,10],
+    desc:'同事因为项目被否，在茶水间摔了马克杯。他骂了很多话，最后转向你大喊："你最近风头那么正——大家都知道你走了捷径，你不觉得亏心吗？！"茶水间静得落针可闻。你知道他这段时间一直活在被裁的恐惧里，但他说的那句话……刺到你了。',
+    choices:[
+      { label:'冷静说明，不激化矛盾', key:'no_glass', perf:0, sanity:-4, rep:+3, dep:0,
+        text:'你说："我不知道你说的捷径是什么。"然后离开了。同事下午主动来道歉，说他最近压力太大。你说没事，但那句"走捷径"还是留在脑子里。' },
+      { label:'戴眼镜，条分缕析地化解', key:'glass', perf:0, sanity:-2, rep:+5, dep:+8,
+        text:'眼镜让你口齿清晰、不带情绪，你帮他拆解了被否的真正原因，甚至给了他改进建议。同事愣了很久，说："……你变了好多。你两年前不是这样的。"你没有回答。' },
+    ]},
+  { id:'project_stolen_credit', title:'作品被人冒用', week:[6,7,8,9,10,11,12],
+    desc:'你在一个设计论坛上发现了一套熟悉的配色方案——那是你上个月交的稿，现在以某家公司的名义挂在上面。那些眼镜戴着时做出来的东西，被人截图放到了更大的平台转发，下面写着"新锐设计风格"。你盯着屏幕，不知道自己该不该愤怒。',
+    choices:[
+      { label:'不管它，继续做自己的', key:'no_glass', perf:0, sanity:-5, rep:0, dep:0,
+        text:'你看了很久，把页面关掉了。你经历过各种被压低的事，但这次不一样——因为你不确定，那些东西，到底算不算是你的创作。这个问题没有答案，你只能把它压下去。' },
+      { label:'戴眼镜，撰文维权、公开声明', key:'glass', perf:0, sanity:-3, rep:+6, dep:+10,
+        text:'在眼镜辅助下你写了一篇措辞严谨的声明，转发量不少，最后对方致歉。但评论区有人说："这篇声明写得比ta作品集里其他文章都好，感觉不像同一个人写的。"你注意到这句话，然后默默把评论区关掉了。' },
+    ]},
+  { id:'final_review', title:'季度考核', week:[10,11,12],
+    desc:'公司进行季度考核。领导要求每人做五分钟汇报，当场问答。HR提前在会议室门口摆了签到表，气氛和以往不一样。这是年末最重要的一环，关系到你还能不能继续待在这里。',
+    choices:[
+      { label:'用真实积累做汇报，不借助眼镜', key:'no_glass', perf:+5, sanity:+5, rep:+8, dep:0,
+        text:'你的汇报不华丽，但诚实。有几个回答不够完美，但每一句话都是你能站在背后负责的。领导最后说："两年的东西，讲清楚了。"评级不最高，但名字没出现在末位名单里。' },
+      { label:'戴眼镜，全力呈现最好状态', key:'glass', perf:+10, sanity:-5, rep:+3, dep:+16,
+        text:'完美的汇报，完美的回答。领导当场点头，几个同事愣了。但下班后mentor把你拉到一边，轻声问："你汇报的时候……那些回答，是你在说，还是……"他没说完，你也没接话。你们都明白他想说什么。' },
+    ]},
+];
+
+/* ── 游戏状态 ── */
+let G = {};
+
+function initGameState() {
+  G = {
+    day: 1, perf: 50, sanity: 60, rep: 40, dep: 0,
+    glassesUsed: 0, useGlassesToday: false,
+    selectedAction: null, selectedEventChoice: null, currentEvent: null,
+    eventPool: [...EVENTS],
+  };
+}
+
+function dayOfWeek(day) { return ((day - 1) % 7) + 1; }
+function isWeekend(day) { const d = dayOfWeek(day); return d === 6 || d === 7; }
+function weekNum(day)   { return Math.ceil(day / 7); }
+function dayName(day)   { return ['周一','周二','周三','周四','周五','周六','周日'][dayOfWeek(day)-1]; }
+function monthDay(day) {
+  const months = [31, 31, 30];
+  let d = day, m = 0;
+  while (d > months[m]) { d -= months[m]; m++; }
+  return `${['三','四','五'][m]}月${d}日`;
+}
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+function pickEvent() {
+  const wk = weekNum(G.day);
+  const eligible = G.eventPool.filter(e => e.week.includes(wk));
+  if (!eligible.length || Math.random() > 0.40) return null;
+  const idx = Math.floor(Math.random() * eligible.length);
+  const ev = eligible[idx];
+  G.eventPool = G.eventPool.filter(e => e.id !== ev.id);
+  return ev;
+}
+
+function renderStatusBars() {
+  [['perf',G.perf,G.perf<=20], ['sanity',G.sanity,G.sanity<=20], ['rep',G.rep,false], ['dep',G.dep,G.dep>=80]].forEach(([id,val,danger]) => {
+    document.getElementById(`bar-${id}`).style.width = clamp(val,0,100) + '%';
+    document.getElementById(`val-${id}`).textContent = clamp(val,0,100);
+    document.getElementById(`row-${id}`).classList.toggle('danger', danger);
+  });
+  document.getElementById('date-display').textContent = `${monthDay(G.day)} · ${dayName(G.day)} · 第${G.day}天`;
+  document.getElementById('glasses-used-count').textContent = G.glassesUsed;
+}
+
+function setNarrative(html) {
+  const box = document.getElementById('narrative-box');
+  box.innerHTML = html;
+  box.classList.remove('g-fade-in');
+  void box.offsetWidth;
+  box.classList.add('g-fade-in');
+}
+
+function line(cls, text) { return `<div class="npc-line ${cls}">${text}</div>`; }
+
+function buildDayNarrative() {
+  const wk = weekNum(G.day);
+  let html = `<div class="npc-narrator" style="color:#aaa;font-style:italic;">── ${monthDay(G.day)} ${dayName(G.day)}，第${wk}周 ──</div>`;
+  if (G.day === 1) {
+    html += line('npc-narrator','三月的第一天。你在这家公司已经两年了，工位还是那个工位，马克杯还是那个马克杯。');
+    html += line('npc-narrator','只是上个月刚走了两个人。据说还有一轮考核。');
+    html += line('npc-narrator','你把那副眼镜压在口袋最深处，打开电脑，登上钉钉，假装什么都没发生过。');
+    html += line('npc-mentor','Mentor（路过你工位，压低声音）："来了。今天有个客户回访，注意点状态。"');
+  } else if (G.day === 7) {
+    html += line('npc-narrator','第一周结束了。你还在。');
+    html += line('npc-narrator','HR下午找了一个设计师谈话，谈完那人直接回座位收了桌上的东西。');
+    html += line('npc-narrator','你低着头，没看，假装在改稿。');
+  } else if (G.day === 30) {
+    html += line('npc-narrator','第一个月过去了。行业的新闻越来越难看，但组里没有人提，大家都在低头做事。');
+    html += line('npc-leader','领导（月会上）："本月整体表现……中规中矩。大环境大家都知道，希望大家多出成果，让数字说话。"');
+    html += line('npc-narrator','他扫了一圈，你觉得他的眼神在你身上多停了半秒。也许是错觉。');
+  } else if (G.day === 60) {
+    html += line('npc-narrator','两个月了。公司官网悄悄撤掉了招聘页面，大家心里都明白是什么意思。');
+    html += line('npc-mentor','Mentor："最近感觉怎么样？"');
+    html += line('npc-self','你："还行。"');
+    html += line('npc-narrator','Mentor沉默了一下，端起杯子，没再追问。');
+  } else if (G.perf <= 25) {
+    html += line('npc-narrator','业绩不好看。你知道这意味着什么——上次裁员名单里，业绩垫底的人一个都没留下来。');
+    html += line('npc-mentor','Mentor（皱着眉）："你这周的稿子……跟领导的要求差距有点大。要不要我帮你过一遍？"');
+  } else if (G.sanity <= 25) {
+    html += line('npc-narrator','你发现自己上班时会莫名其妙发呆，对着设计稿脑子里一片空白。');
+    html += line('npc-narrator','已经不记得上次真心喜欢做一个东西是什么时候了。可能是入职前，可能是更早。');
+  } else if (G.dep >= 70) {
+    html += line('npc-narrator','你意识到，摘下眼镜盯着空白的画布，你不知道从哪里开始了。');
+    html += line('npc-narrator','你试着回想，不戴它的时候你是怎么开始的——想不起来了。');
+    html += line('npc-mentor','Mentor（若有所思）："你最近……好像不戴那个就做不下去了？"');
+  } else {
+    const flavors = [
+      line('npc-narrator','又是普通的一天。咖啡机还是坏的，空调还是太冷，走廊里贴着的"降本增效"的海报换了新颜色。'),
+      line('npc-colleague','同事（甩过来一份参考图）："这个风格你觉得能做吗？领导那边还在等，上次改了四遍他还不满意。"'),
+      line('npc-narrator','楼道里有人在打电话，声音压得很低。你大概能猜到是什么事，但你没有精力在乎别人的事了。'),
+      line('npc-mentor','Mentor："今天任务量不少，注意时间管理——对了，下周可能有客户突访，做好准备。"') + line('npc-self','你心想，哪个月不是这样。'),
+      line('npc-narrator','你路过领导的工位，他正盯着某个数据表眉头紧锁。你悄悄加快了步伐，假装没看见。'),
+      line('npc-colleague','同事（小声）："哎，听说这季度如果数字再差，年终奖就没了。你觉得是真的吗？"') + line('npc-self','你："……不知道。"'),
+      line('npc-narrator','今天的工作量比想象中多，截止时间比想象中近。你已经不对这件事感到意外了。'),
+    ];
+    html += flavors[G.day % flavors.length];
+  }
+  return html;
+}
+
+function renderActions() {
+  const actions = isWeekend(G.day) ? WEEKEND_ACTIONS : WEEKDAY_ACTIONS;
+  document.getElementById('action-title').textContent = isWeekend(G.day) ? '今天是周末' : '今天的行动';
+  const container = document.getElementById('action-choices');
+  container.innerHTML = '';
+  G.selectedAction = null;
+  actions.forEach(a => {
+    const btn = document.createElement('button');
+    btn.className = 'action-btn'; btn.dataset.id = a.id;
+    btn.innerHTML = `<strong>${a.label}</strong><div class="action-effect">${a.effect}</div>`;
+    btn.onclick = () => selectAction(a.id);
+    container.appendChild(btn);
+  });
+}
+
+function selectAction(id) {
+  G.selectedAction = id;
+  document.querySelectorAll('#action-choices .action-btn').forEach(b => b.classList.toggle('selected', b.dataset.id === id));
+  updateConfirmBtn();
+}
+
+function renderEvent(ev) {
+  G.currentEvent = ev; G.selectedEventChoice = null;
+  const section = document.getElementById('event-section');
+  section.classList.remove('hidden-g');
+  document.getElementById('event-desc').textContent = ev.desc;
+  document.getElementById('event-title-h3').textContent = `── ${ev.title}`;
+  const container = document.getElementById('event-choices');
+  container.innerHTML = '';
+  ev.choices.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'action-btn'; btn.dataset.key = c.key;
+    btn.innerHTML = `<strong>${c.label}</strong>`;
+    btn.onclick = () => selectEventChoice(c.key);
+    container.appendChild(btn);
+  });
+}
+
+function selectEventChoice(key) {
+  G.selectedEventChoice = key;
+  document.querySelectorAll('#event-choices .action-btn').forEach(b => b.classList.toggle('selected', b.dataset.key === key));
+  updateConfirmBtn();
+}
+
+function toggleGlasses() {
+  G.useGlassesToday = !G.useGlassesToday;
+  document.getElementById('glasses-toggle').classList.toggle('active', G.useGlassesToday);
+  document.getElementById('glasses-hint').textContent = G.useGlassesToday
+    ? `第 ${G.glassesUsed + 1} 次`
+    : '表现会不一样';
+  updateConfirmBtn();
+}
+
+function updateConfirmBtn() {
+  const btn = document.getElementById('confirm-btn');
+  const needEvent = G.currentEvent !== null;
+  const ready = G.selectedAction !== null && (!needEvent || G.selectedEventChoice !== null);
+  btn.disabled = !ready;
+  btn.textContent = ready ? '确认今日行动 →' : '请选择今天的行动';
+}
+
+function formatDeltas(dp, ds, dr, dd) {
+  const fmt = (v, label) => {
+    if (v === 0) return `<span style="color:#666">${label} ±0</span>`;
+    return `<span style="color:${v>0?'#2ecc71':'#e74c3c'}">${label} ${v>0?'+':''}${v}</span>`;
+  };
+  return [fmt(dp,'业绩'), fmt(ds,'心态'), fmt(dr,'声誉'), dd>0?`<span style="color:#9b59b6">依赖度 +${dd}</span>`:''].filter(Boolean).join('　');
+}
+
+function confirmAction() {
+  const actions = isWeekend(G.day) ? WEEKEND_ACTIONS : WEEKDAY_ACTIONS;
+  const action = actions.find(a => a.id === G.selectedAction);
+  const useGlass = G.useGlassesToday;
+  let resultHTML = '', dp=0, ds=0, dr=0, dd=0;
+
+  if (G.currentEvent) {
+    const ev = G.currentEvent;
+    const choiceKey = G.selectedEventChoice;
+    const glassChosen = choiceKey === 'glass';
+    const actualChoice = (glassChosen && !useGlass) ? ev.choices.find(c => c.key==='no_glass') : ev.choices.find(c => c.key===choiceKey);
+    dp += actualChoice.perf; ds += actualChoice.sanity; dr += actualChoice.rep; dd += actualChoice.dep;
+    resultHTML += `<div style="color:#f1c40f;font-weight:bold;margin-bottom:6px;">【${ev.title}】</div>`;
+    resultHTML += line('npc-narrator', actualChoice.text);
+    if (glassChosen && !useGlass) resultHTML += line('npc-narrator', '<em>（你选择了用那个方式处理，但今天没戴眼镜……只能靠自己发挥了。）</em>');
+    resultHTML += '<br>';
+  }
+
+  if (useGlass) {
+    dp += action.glassPerf; ds += action.glassSanity; dr += action.glassRep; dd += 10;
+    G.glassesUsed++;
+    resultHTML += line('npc-narrator', action.glassText);
+  } else {
+    dp += action.perf; ds += action.sanity; dr += action.rep;
+    resultHTML += line('npc-narrator', action.normalText);
+  }
+
+  G.perf   = clamp(G.perf   + dp, 0, 100);
+  G.sanity = clamp(G.sanity + ds, 0, 100);
+  G.rep    = clamp(G.rep    + dr, 0, 100);
+  G.dep    = clamp(G.dep    + dd, 0, 100);
+
+  resultHTML += `<div style="margin-top:10px;font-size:0.8em;color:#888;">${formatDeltas(dp,ds,dr,dd)}</div>`;
+  setNarrative(resultHTML);
+  renderStatusBars();
+
+  if (checkGameOver()) return;
+  setTimeout(() => advanceDay(), 1800);
+}
+
+function checkGameOver() {
+  if (G.dep >= 100)    { showEnding('dep_max');    return true; }
+  if (G.perf <= 0)     { showEnding('perf_zero');  return true; }
+  if (G.sanity <= 0)   { showEnding('sanity_zero');return true; }
+  return false;
+}
+
+function advanceDay() {
+  G.day++;
+  G.useGlassesToday = false; G.selectedAction = null; G.selectedEventChoice = null; G.currentEvent = null;
+  if (G.day > DAYS_TOTAL) { showEnding(); return; }
+  document.getElementById('glasses-toggle').classList.remove('active');
+  document.getElementById('glasses-hint').textContent = '表现会不一样';
+  document.getElementById('event-section').classList.add('hidden-g');
+  if (!isWeekend(G.day)) {
+    G.sanity = clamp(G.sanity - 1, 0, 100);
+    if (G.rep < 25) G.perf = clamp(G.perf - 1, 0, 100);
+  }
+  renderStatusBars();
+  if (!isWeekend(G.day)) { const ev = pickEvent(); if (ev) renderEvent(ev); }
+  setNarrative(buildDayNarrative());
+  renderActions();
+  updateConfirmBtn();
+}
+
+const ENDINGS = {
+  dep_max: {
+    title:'被时代淘汰', tag:'BAD END', tagClass:'tag-bad', titleColor:'#e74c3c',
+    text:`它是在一条评论里开始的。<br><br>有人把你最近几个月的设计稿截图放在一起，配了一句话：<em>"这个人以前和现在的风格完全不像同一个人在做——因为本来就不是。"</em><br><br>评论区炸开了。有人认出了配色和构图特征，有人翻出你两年前刚入职时发过的作品——那些粗糙但真实的东西，和现在精准但空洞的输出放在一起，沉默比嘲讽更难受。<br><br>公司没有主动开除你，是客户陆续说"不想再合作了"。领导叫你进办公室，把合同放在桌上，说了一句你一辈子都会记得的话：<br><br><em class="npc-leader">"你在这里做了两年，我见过你最好的状态，也见过你后来的样子。最可惜的不是你用了那个东西——是你把自己交出去了，然后你以为没人看见。"</em><br><br>你把那副眼镜放回了口袋，但你发现自己拿起画笔，什么也画不出来了。<br><br><span class="bad-news">不是因为没有才华——是因为你已经忘了自己的才华在哪里了。</span>`,
+  },
+  perf_zero: {
+    title:'被裁了', tag:'BAD END', tagClass:'tag-bad', titleColor:'#e74c3c',
+    text:`HR很客气，给了你缓冲期，还帮你准备了推荐信。<br><br>领导在你离职前找你谈了一次，没有斥责，比你预想的平静。他说：<em>"你不是做不了这份工作。两年前你来的时候我就觉得你有点东西，但后来……你好像越来越不在了。我能分辨。"</em><br><br>你想辩解，但想到那些空白的下午，想到那些对着屏幕发呆的深夜，想到那副眼镜带给你的一次次临时胜利，你什么也没说。<br><br>Mentor在你最后一天请你吃了顿饭，聊了很多有的没的，最后才说：<em class="npc-mentor">"我一直想跟你说：你其实比你想的要能扛。我只是希望你早点告诉我哪里卡住了。"</em><br><br><span class="bad-news">你终于意识到，那副眼镜救不了一个已经不再真正尝试的人。</span>`,
+  },
+  sanity_zero: {
+    title:'撑不住了', tag:'BAD END', tagClass:'tag-bad', titleColor:'#e74c3c',
+    text:`那天下午你坐在工位上，电脑屏幕亮着，你看着那个空白画布，忽然发现自己不知道为什么要坐在这里。<br><br>不是累——是比累更深的东西。这根弦不知道从什么时候开始一直紧着，然后某一天，悄无声息地断了，你甚至没有感觉到疼痛。<br><br>Mentor发现你在茶水间站了很久，问你没事吧。你说没事，然后哭了。<br><br>你请了假。医生说需要休息，建议调整工作节奏。<br><br>那副眼镜一直放在抽屉里，你没有再碰它。<br><br><span class="bad-news">有些东西用工具可以撑住，但用工具撑不住的，是重新喜欢上一件事这件事本身。</span><br><br>你不知道还能不能找回来，但你开始慢慢试了。`,
+  },
+};
+
+function getGoodEnding() {
+  const g = G.glassesUsed, rep = G.rep;
+  if (g === 0) return {
+    title:'平凡，但是我的', tag:'TRUE END', tagClass:'tag-good', titleColor:'#58d68d',
+    text:`三个月结束了，你一次都没有戴那副眼镜。<br><br>这条路走得很难。行业不好做，组里陆陆续续少了几张脸，有几次你差点排进末位名单，有几个深夜你对着那副眼镜发了很久的呆，然后把它收回抽屉里。<br><br>季度考核的会上，领导说了一句话，说的是你："这两年一直在，产出不是最好的，但我知道那都是你自己做的。在这种环境下，这比你想象中稀缺。"<br><br>你当时没太当回事，但后来想起来，那句话很重要。<br><br>Mentor请你喝咖啡，说："说实话，我一直以为你会用那个东西。但你没用。我不知道你是怎么撑过来的。"<br><br>那副眼镜还在口袋里。你不知道它是什么，也不知道那个黑衣人为什么给你，但你知道一件事：<br><br><span class="good-news">你交出去的每一份稿件，都是你自己的。好也好，差也好，都是你站在后面的。</span><br><br>这件事，没有任何工具能替你做到。`,
+  };
+  if (g <= 10 && rep >= 60) return {
+    title:'工具是工具，人是人', tag:'GOOD END', tagClass:'tag-good', titleColor:'#58d68d',
+    text:`三个月里，你偶尔戴过那副眼镜——大概几次，都是在真的撑不住的关键时刻。其他时候，你选择了靠自己的东西。<br><br>季度考核后，领导单独找你谈话，说了一段你记了很久的话："能用工具但没被工具带走，这是我在这个行业里见过的最难做到的一件事。"<br><br>你不确定他说的"工具"指的是眼镜还是别的什么，但你觉得自己听懂了。<br><br>散会后同事小声问你："你那副眼镜……是什么来的？"<br><br>你想了想，摘下来放在他手里："你试试。"<br><br>他戴上，沉默了一会儿，摘下来还给你，说："……有意思。但感觉不像我。"<br><br>你点了点头，<span class="good-news">说："对，就是这个感觉最重要。"</span>`,
+  };
+  if (g <= 25 && rep >= 50) return {
+    title:'普通结局', tag:'NORMAL END', tagClass:'tag-normal', titleColor:'#5dade2',
+    text:`三个月就这样过去了。你用了眼镜，也没用。有几次你觉得很依赖，又刻意收手，但没收得那么干净。<br><br>整体成绩过得去。考核结果出来，你的名字不在末位名单里——在这个时间点，这本身不是一件理所当然的事。Mentor说"有进步"，表情有点复杂。<br><br>你不知道那副眼镜的边界在哪里，也不再确定自己真实的水平是多少了——因为那条线已经模糊了。<br><br>续签了，工资涨了一点点。你站在公司楼下，把眼镜捏在手里看了很久。<br><br>明天要交一个新提案。你不知道今天要不要戴它。<br><br><span style="color:#aaa;">——这个问题，你以后还会面对很多次。</span>`,
+  };
+  return {
+    title:'还好，活下来了', tag:'NORMAL END', tagClass:'tag-normal', titleColor:'#5dade2',
+    text:`三个月，磕磕绊绊地过来了。<br><br>业绩没有特别好，也没有特别坏。那副眼镜你用了不少次，也拒绝了不少次。你还在，这件事本身已经比你想象中来之不易。<br><br>最后一周，领导把所有人叫在一起，念了几个"表现不错"的名字。你的名字不在里面，但你也不在末位那份要"进一步跟进"的名单上。<br><br>你走出公司，口袋里是那副眼镜。<br><br>Mentor追出来说了句"辛苦了"，你说"你也是"，然后各自走向各自的地铁站。<br><br>两年了。<br><br><span style="color:#aaa;">平凡的结局。但你还在这里，明天还要来上班——在这个时代，这本身就是一种答案。</span>`,
+  };
+}
+
+function showEnding(type) {
+  // 隐藏操作区，显示结局
+  document.getElementById('action-section').style.display = 'none';
+  document.getElementById('glasses-section').style.display = 'none';
+  document.getElementById('confirm-btn').style.display = 'none';
+  document.getElementById('event-section').classList.add('hidden-g');
+  document.querySelector('.game-divider').style.display = 'none';
+
+  const ending = (type && ENDINGS[type]) ? ENDINGS[type] : getGoodEnding();
+  const rs = document.getElementById('result-screen');
+  rs.classList.add('show');
+  document.getElementById('result-title').textContent = ending.title;
+  document.getElementById('result-title').style.color = ending.titleColor;
+  document.getElementById('result-tag-container').innerHTML = `<div class="result-tag ${ending.tagClass}">${ending.tag}</div>`;
+  document.getElementById('result-text').innerHTML = ending.text;
+  document.getElementById('result-stats').innerHTML = `
+    <div class="stat-chip">业绩 <span>${G.perf}</span></div>
+    <div class="stat-chip">心态 <span>${G.sanity}</span></div>
+    <div class="stat-chip">声誉 <span>${G.rep}</span></div>
+    <div class="stat-chip">依赖度 <span>${G.dep}</span></div>
+    <div class="stat-chip">眼镜使用 <span>${G.glassesUsed}</span> 次</div>
+    <div class="stat-chip">坚持了 <span>${Math.min(G.day,DAYS_TOTAL)}</span> 天</div>
+  `;
+  // 滚动到结局
+  rs.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
 </body>
 </html>
