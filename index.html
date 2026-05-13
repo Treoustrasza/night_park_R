@@ -495,6 +495,15 @@ body {
       <h3 id="event-title-h3">── 突发事件</h3>
       <div id="event-desc"></div>
       <div id="event-choices" class="action-grid"></div>
+      <!-- 事件独立眼镜开关 -->
+      <div class="glasses-toggle-row" id="event-glasses-toggle" onclick="toggleEventGlasses()" style="margin-top:10px;">
+        <span class="glasses-icon">👓</span>
+        <div class="glasses-text">
+          处理这件事时戴上眼镜
+          <small id="event-glasses-hint">会有不同的发挥</small>
+        </div>
+        <div class="toggle-indicator"></div>
+      </div>
     </div>
 
     <!-- 行动区 -->
@@ -533,6 +542,7 @@ body {
   </div>
 </div>
 
+<script src="events.js"></script>
 <script>
 /* ══════════════════════════════════════
    星星生成
@@ -1113,88 +1123,7 @@ const WEEKEND_ACTIONS = [
     glassText:'眼镜让你消化课程内容轻而易举，课上的表现比旁边的人都好。但课后和同学一起讨论的时候，你摘下眼镜，发现自己其实什么都没真正内化——只是暂时理解了而已。' },
 ];
 
-const EVENTS = [
-  { id:'pitch_fail', title:'提案翻车', weekdayOnly:true, week:[1,2],
-    desc:'领导突然把你叫进会议室，当着几个大客户的面，要求你现场讲解你上周交的提案。这种场面你见过，但今天你突然发现自己连自己写了什么都没理清楚。领导的眼神越来越冷，你知道这个客户很重要——公司正在缺单子的时候。',
-    choices:[
-      { label:'硬撑，尽量讲清楚', key:'no_glass', perf:-6, sanity:-8, rep:-3, dep:0,
-        text:'你磕磕绊绊地讲完了，客户没被说服，领导会后低声说："你做了两年了，这个状态不行。"但你没有倒下。你记下来了，下次不能这样。' },
-      { label:'戴上眼镜，临场发挥', key:'glass', perf:+5, sanity:+2, rep:+4, dep:+12,
-        text:'眼镜滑上鼻梁，你忽然口若悬河，把整个方案讲得条理清晰，客户频频点头。领导的表情松动了。散会后mentor把你拉到角落，小声说："……你今天哪来的这个状态？跟平时不一样。"' },
-    ]},
-  { id:'colleague_conflict', title:'同事抢功', weekdayOnly:true, week:[1,2,3],
-    desc:'你花了三天做的方案被同事在全组会议上当成"我们一起讨论的结果"提交了上去，领导当场表扬了他。你就坐在旁边，没人提你的名字。不是第一次了——但今年大家都在争表现，谁都想留下来。',
-    choices:[
-      { label:'忍了，私下找mentor聊', key:'no_glass', perf:0, sanity:-7, rep:0, dep:0,
-        text:'Mentor听完叹了口气："这种事……在这个时候，忍比闹强。注意留证据。"你心里堵着一口气，但你知道他说的是对的。现在不是正面冲突的时候。' },
-      { label:'当场说明情况（戴着眼镜）', key:'glass', perf:+2, sanity:-2, rep:+6, dep:+8,
-        text:'眼镜让你措辞得体、不卑不亢，你简短说明了设计细节，领导抬头看了你一眼："哦，是你做的？"同事脸色一变。你赢了这一局，但你知道他从此会更用心地挑你的毛病。' },
-    ]},
-  { id:'leader_review', title:'领导突击检查', weekdayOnly:true, week:[2,3,4,5,6],
-    desc:'领导拿着你最近几周的提交记录，坐到你工位旁边，沉默了几秒后开口："讲讲你的设计思路。"你知道这不是随便问问——行业不好做，他在评估每个人的价值。',
-    choices:[
-      { label:'据实回答，诚实说有些地方不确定', key:'no_glass', perf:-4, sanity:+2, rep:+3, dep:0,
-        text:'"我觉得配色参考了这个，但效果不太确定……"领导看了你一会儿，说："能说出自己不确定的地方，说明还在想。回去把这部分重做。"扣了业绩，但他没有失望地离开。' },
-      { label:'戴眼镜，侃侃而谈', key:'glass', perf:+4, sanity:0, rep:+2, dep:+10,
-        text:'你流利地拆解每一个设计决策，连用色心理学都信手拈来。领导沉默了更长时间，然后说："说得不错。"但他看你的眼神，比之前更锐利了——像是在确认他刚才听到的是不是真的你。' },
-    ]},
-  { id:'crunch_project', title:'紧急项目压下来', weekdayOnly:true, week:[2,3,4,5,6,7,8],
-    desc:'大客户临时要求三天内出一套完整VI方案，按理应该两周做的事。领导把任务直接甩给了你和同事。同事当场说："这不合理，这就是在逼人走。"然后被领导叫去单独谈话，出来后就直接收拾东西离职了。你独自坐在工位前，盯着需求文档，知道这件事现在全压在你身上。',
-    choices:[
-      { label:'咬牙硬做，靠自己', key:'no_glass', perf:+6, sanity:-12, rep:+4, dep:0,
-        text:'三天，几乎没睡，方案粗糙但交上去了。领导说"基本能用"，客户接受了。你感觉右眼皮在跳，但你撑过来了，而且那些东西是你做的，你站得住。' },
-      { label:'戴上眼镜全力冲刺', key:'glass', perf:+14, sanity:-4, rep:+7, dep:+15,
-        text:'眼镜让你进入一种近乎超人的状态，三天出了一套专业水准的VI。领导在全组会议上表扬了你，说"这才是老员工应有的担当"。但你盯着那份稿子，心里有个声音在问：没有眼镜，我还做得出来吗？' },
-    ]},
-  { id:'mentor_advice', title:'Mentor找你谈话', weekdayOnly:true, week:[2,3,4,5,6,7,8],
-    desc:'Mentor叫你去喝咖啡，欲言又止了半天，最后说："我想跟你说一件事，但不知道怎么开口。"他停了停，"你最近有些东西……我说不清楚，但感觉不太对。你还好吗？"',
-    choices:[
-      { label:'说没事，一笑而过', key:'no_glass', perf:0, sanity:0, rep:0, dep:0,
-        text:'"可能最近大环境压力大，状态有点波动。"你接过咖啡杯，把话题带走了。Mentor点了点头，眼神里有些你没读出来的东西——担心，或者遗憾，你分不清。' },
-      { label:'半开玩笑地说"我找到了一个神器"（戴着眼镜）', key:'glass', perf:0, sanity:+3, rep:-2, dep:+6,
-        text:'眼镜让你讲述得云淡风轻，mentor听完沉默了好一会儿，说："……你有没有想过，如果那个东西不在了，你怎么办？"你愣了一下，笑着说没事的。他没再说话，看着你的表情让你有点不安。' },
-    ]},
-  { id:'industry_talk', title:'行业交流会', week:[3,4,5,6,7],
-    desc:'公司难得送你去参加一个行业设计交流会。现场挤满了同样焦虑的设计师，大家都在看谁还活着、活得怎么样。问答环节主持人突然点你的名，问你对行业当前趋势的看法。全场安静，都在等你开口。',
-    choices:[
-      { label:'讲自己真实的感受', key:'no_glass', perf:0, sanity:+3, rep:+5, dep:0,
-        text:'你说了一些不够光鲜的实话——行业在收缩，但真正有沉淀的东西还是有市场的。台下反应平淡，但回来后有个设计师找到你，说"你说的那个点，我做了五年才想到，你才几年？"' },
-      { label:'戴上眼镜，给出一个完美回答', key:'glass', perf:0, sanity:-2, rep:+8, dep:+12,
-        text:'你出口成章，引经据典，台下响起掌声。会后有人来要名片，说"你讲得比很多做了十年的人清晰"。但走出会场，你摘掉眼镜，努力回忆刚才自己说了什么——什么都想不起来了。那些话，不是你的。' },
-    ]},
-  { id:'boss_private', title:'领导的私下质疑', weekdayOnly:true, week:[5,6,7,8,9,10,11,12],
-    desc:'领导把你叫到走廊上，没有录音，没有证人。他直视着你，声音压低了很多："你在这里做了两年，我记得你刚来的样子。你最近的输出……我有时候觉得很好，有时候又觉得完全是两个人做的。你在做什么？"',
-    choices:[
-      { label:'坦然回应："我在摸索，不稳定是真的"', key:'no_glass', perf:-2, sanity:-3, rep:+5, dep:0,
-        text:'领导沉默了很长时间。"不稳定就是不稳定。现在这个情况，我需要的是能站在成果背后的人，不是偶尔发挥好的人。"他转身离开，但你感觉他是在认真听的——他没有用这个否定你。' },
-      { label:'戴着眼镜，给出一套说辞', key:'glass', perf:0, sanity:-8, rep:0, dep:+14,
-        text:'眼镜让你的解释天衣无缝，逻辑完整，甚至反过来让领导觉得自己可能想多了。他离开时若有所思。但你站在走廊里发现，你刚才对他撒谎了，而且撒得那么流利，那么自然——你已经说不清楚什么是真的了。' },
-    ]},
-  { id:'colleague_breakdown', title:'同事的愤怒', weekdayOnly:true, week:[4,5,6,7,8,9,10],
-    desc:'同事因为项目被否，在茶水间摔了马克杯。他骂了很多话，最后转向你大喊："你最近风头那么正——大家都知道你走了捷径，你不觉得亏心吗？！"茶水间静得落针可闻。你知道他这段时间一直活在被裁的恐惧里，但他说的那句话……刺到你了。',
-    choices:[
-      { label:'冷静说明，不激化矛盾', key:'no_glass', perf:0, sanity:-4, rep:+3, dep:0,
-        text:'你说："我不知道你说的捷径是什么。"然后离开了。同事下午主动来道歉，说他最近压力太大。你说没事，但那句"走捷径"还是留在脑子里。' },
-      { label:'戴眼镜，条分缕析地化解', key:'glass', perf:0, sanity:-2, rep:+5, dep:+8,
-        text:'眼镜让你口齿清晰、不带情绪，你帮他拆解了被否的真正原因，甚至给了他改进建议。同事愣了很久，说："……你变了好多。你两年前不是这样的。"你没有回答。' },
-    ]},
-  { id:'project_stolen_credit', title:'作品被人冒用', week:[6,7,8,9,10,11,12],
-    desc:'你在一个设计论坛上发现了一套熟悉的配色方案——那是你上个月交的稿，现在以某家公司的名义挂在上面。那些眼镜戴着时做出来的东西，被人截图放到了更大的平台转发，下面写着"新锐设计风格"。你盯着屏幕，不知道自己该不该愤怒。',
-    choices:[
-      { label:'不管它，继续做自己的', key:'no_glass', perf:0, sanity:-5, rep:0, dep:0,
-        text:'你看了很久，把页面关掉了。你经历过各种被压低的事，但这次不一样——因为你不确定，那些东西，到底算不算是你的创作。这个问题没有答案，你只能把它压下去。' },
-      { label:'戴眼镜，撰文维权、公开声明', key:'glass', perf:0, sanity:-3, rep:+6, dep:+10,
-        text:'在眼镜辅助下你写了一篇措辞严谨的声明，转发量不少，最后对方致歉。但评论区有人说："这篇声明写得比ta作品集里其他文章都好，感觉不像同一个人写的。"你注意到这句话，然后默默把评论区关掉了。' },
-    ]},
-  { id:'final_review', title:'季度考核', weekdayOnly:true, week:[10,11,12],
-    desc:'公司进行季度考核。领导要求每人做五分钟汇报，当场问答。HR提前在会议室门口摆了签到表，气氛和以往不一样。这是年末最重要的一环，关系到你还能不能继续待在这里。',
-    choices:[
-      { label:'用真实积累做汇报，不借助眼镜', key:'no_glass', perf:+5, sanity:+5, rep:+8, dep:0,
-        text:'你的汇报不华丽，但诚实。有几个回答不够完美，但每一句话都是你能站在背后负责的。领导最后说："两年的东西，讲清楚了。"评级不最高，但名字没出现在末位名单里。' },
-      { label:'戴眼镜，全力呈现最好状态', key:'glass', perf:+10, sanity:-5, rep:+3, dep:+16,
-        text:'完美的汇报，完美的回答。领导当场点头，几个同事愣了。但下班后mentor把你拉到一边，轻声问："你汇报的时候……那些回答，是你在说，还是……"他没说完，你也没接话。你们都明白他想说什么。' },
-    ]},
-];
+// EVENTS 数组已移至 events.js
 
 /* ── 游戏状态 ── */
 let G = {};
@@ -1202,7 +1131,7 @@ let G = {};
 function initGameState() {
   G = {
     day: 1, perf: 50, sanity: 60, rep: 40, dep: 0,
-    glassesUsed: 0, useGlassesToday: false,
+    glassesUsed: 0, useGlassesToday: false, useGlassForEvent: false,
     studyCount: 0,  // 自学次数
     learnCount: 0,  // 听课次数
     selectedAction: null, selectedEventChoice: null, currentEvent: null,
@@ -1354,18 +1283,18 @@ function renderEvent(ev) {
   document.getElementById('event-title-h3').textContent = `── ${ev.title}`;
   const container = document.getElementById('event-choices');
   container.innerHTML = '';
-  ev.choices.forEach(c => {
+  ev.choices.forEach((c, idx) => {
     const btn = document.createElement('button');
-    btn.className = 'action-btn'; btn.dataset.key = c.key;
+    btn.className = 'action-btn'; btn.dataset.idx = idx;
     btn.innerHTML = `<strong>${c.label}</strong>`;
-    btn.onclick = () => selectEventChoice(c.key);
+    btn.onclick = () => selectEventChoice(idx);
     container.appendChild(btn);
   });
 }
 
-function selectEventChoice(key) {
-  G.selectedEventChoice = key;
-  document.querySelectorAll('#event-choices .action-btn').forEach(b => b.classList.toggle('selected', b.dataset.key === key));
+function selectEventChoice(idx) {
+  G.selectedEventChoice = idx;
+  document.querySelectorAll('#event-choices .action-btn').forEach(b => b.classList.toggle('selected', +b.dataset.idx === idx));
   updateConfirmBtn();
 }
 
@@ -1373,15 +1302,24 @@ function toggleGlasses() {
   G.useGlassesToday = !G.useGlassesToday;
   document.getElementById('glasses-toggle').classList.toggle('active', G.useGlassesToday);
   document.getElementById('glasses-hint').textContent = G.useGlassesToday
-    ? '应该会顺利很多吧'
-    : '表现会不一样';
+  ? '应该会顺利很多吧'
+  : '表现会不一样';
+  updateConfirmBtn();
+}
+
+function toggleEventGlasses() {
+  G.useGlassForEvent = !G.useGlassForEvent;
+  document.getElementById('event-glasses-toggle').classList.toggle('active', G.useGlassForEvent);
+  document.getElementById('event-glasses-hint').textContent = G.useGlassForEvent
+  ? '应该会顺利很多吧'
+  : '会有不同的发挥';
   updateConfirmBtn();
 }
 
 function updateConfirmBtn() {
   const btn = document.getElementById('confirm-btn');
   const needEvent = G.currentEvent !== null;
-  const ready = G.selectedAction !== null && (!needEvent || G.selectedEventChoice !== null);
+  const ready = G.selectedAction !== null && (!needEvent || typeof G.selectedEventChoice === 'number');
   btn.disabled = !ready;
   btn.textContent = ready ? '确认今日行动 →' : '请选择今天的行动';
 }
@@ -1402,19 +1340,24 @@ function confirmAction() {
 
   if (G.currentEvent) {
     const ev = G.currentEvent;
-    const choiceKey = G.selectedEventChoice;
-    const glassChosen = choiceKey === 'glass';
-    const actualChoice = (glassChosen && !useGlass) ? ev.choices.find(c => c.key==='no_glass') : ev.choices.find(c => c.key===choiceKey);
-    dp += actualChoice.perf; ds += actualChoice.sanity; dr += actualChoice.rep; dd += actualChoice.dep;
+    const choiceIdx = G.selectedEventChoice; // 现在存的是选项索引
+    const useGlassEvent = G.useGlassForEvent;
+    const choice = ev.choices[choiceIdx];
+    // 按是否戴眼镜取对应数值，dep 减半（事件不持续一整天）
+    const dp_ = useGlassEvent ? choice.glassPerf  : choice.normalPerf;
+    const ds_ = useGlassEvent ? choice.glassSanity : choice.normalSanity;
+    const dr_ = useGlassEvent ? choice.glassRep    : choice.normalRep;
+    const dd_ = Math.floor((useGlassEvent ? choice.glassDep : choice.normalDep) / 2);
+    dp += dp_; ds += ds_; dr += dr_; dd += dd_;
+    if (useGlassEvent) { G.glassesUsed++; }
     resultHTML += `<div style="color:#f1c40f;font-weight:bold;margin-bottom:6px;">【${ev.title}】</div>`;
-    resultHTML += line('npc-narrator', actualChoice.text);
-    if (glassChosen && !useGlass) resultHTML += line('npc-narrator', '<em>（你选择了用那个方式处理，但今天没戴眼镜……只能靠自己发挥了。）</em>');
+    resultHTML += line('npc-narrator', useGlassEvent ? choice.glassText : choice.normalText);
     resultHTML += '<br>';
   }
 
   if (useGlass) {
     dp += action.glassPerf; ds += action.glassSanity; dr += action.glassRep; dd += 10;
-    G.glassesUsed++;
+    G.glassesUsed++;  // 日常行动用眼镜
     resultHTML += line('npc-narrator', action.glassText);
   } else {
     dp += action.perf; ds += action.sanity; dr += action.rep;
@@ -1450,7 +1393,17 @@ function confirmAction() {
   renderStatusBars();
 
   if (checkGameOver()) return;
-  setTimeout(() => advanceDay(), 1800);
+
+  // 等玩家主动点击继续，不自动跳转
+  const btn = document.getElementById('confirm-btn');
+  btn.disabled = false;
+  btn.textContent = '继续 →';
+  btn.onclick = () => {
+    btn.onclick = () => confirmAction();
+    btn.textContent = '请选择今天的行动';
+    btn.disabled = true;
+    advanceDay();
+  };
 }
 
 function checkGameOver() {
@@ -1462,10 +1415,14 @@ function checkGameOver() {
 
 function advanceDay() {
   G.day++;
-  G.useGlassesToday = false; G.selectedAction = null; G.selectedEventChoice = null; G.currentEvent = null;
+  G.useGlassesToday = false; G.useGlassForEvent = false;
+  G.selectedAction = null; G.selectedEventChoice = null; G.currentEvent = null;
   if (G.day > DAYS_TOTAL) { showEnding(); return; }
   document.getElementById('glasses-toggle').classList.remove('active');
   document.getElementById('glasses-hint').textContent = '表现会不一样';
+  const evGlassToggle = document.getElementById('event-glasses-toggle');
+  if (evGlassToggle) { evGlassToggle.classList.remove('active'); }
+  document.getElementById('event-glasses-hint').textContent = '会有不同的发挥';
   document.getElementById('event-section').classList.add('hidden-g');
   if (!isWeekend(G.day)) {
     G.sanity = clamp(G.sanity - 1, 0, 100);
