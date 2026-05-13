@@ -543,6 +543,8 @@ body {
 </div>
 
 <script src="events.js"></script>
+<script src="narrative.js"></script>
+<script src="endings.js"></script>
 <script>
 /* ══════════════════════════════════════
    星星生成
@@ -1182,77 +1184,7 @@ function setNarrative(html) {
 
 function line(cls, text) { return `<div class="npc-line ${cls}">${text}</div>`; }
 
-function buildDayNarrative() {
-  const wk = weekNum(G.day);
-  let html = `<div class="npc-narrator" style="color:#aaa;font-style:italic;">── ${monthDay(G.day)} ${dayName(G.day)}，第${wk}周 ──</div>`;
-  if (G.day === 1) {
-    html += line('npc-narrator','三月的第一天。你在这家公司已经两年了，工位还是那个工位，马克杯还是那个马克杯。');
-    html += line('npc-narrator','只是上个月刚走了两个人。据说还有一轮考核。');
-    html += line('npc-narrator','你把那副眼镜压在口袋最深处，打开电脑，登上钉钉，假装什么都没发生过。');
-    html += line('npc-mentor','Mentor（路过你工位，压低声音）："来了。今天有个客户回访，注意点状态。"');
-  } else if (G.day === 5) {
-    html += line('npc-narrator','第一周结束了。你还在。');
-    html += line('npc-narrator','HR下午找了一个设计师谈话，谈完那人直接回座位收了桌上的东西。');
-    html += line('npc-narrator','你低着头，没看，假装在改稿。');
-  } else if (G.day === 30) {
-    html += line('npc-narrator','第一个月过去了。行业的新闻越来越难看，但组里没有人提，大家都在低头做事。');
-    html += line('npc-leader','领导（月会上）："本月整体表现……中规中矩。大环境大家都知道，希望大家多出成果，让数字说话。"');
-    html += line('npc-narrator','他扫了一圈，你觉得他的眼神在你身上多停了半秒。也许是错觉。');
-  } else if (G.day === 60) {
-    html += line('npc-narrator','两个月了。公司官网悄悄撤掉了招聘页面，大家心里都明白是什么意思。');
-    html += line('npc-mentor','Mentor："最近感觉怎么样？"');
-    html += line('npc-self','你："还行。"');
-    html += line('npc-narrator','Mentor沉默了一下，端起杯子，没再追问。');
-  } else if (G.perf <= 25) {
-    if (isWeekend(G.day)) {
-      html += line('npc-narrator','业绩的数字在脑子里转。你知道这意味着什么——上次裁员名单里，业绩垫底的人一个都没留下来。');
-      html += line('npc-narrator','周末也没办法真正放下来。');
-    } else {
-      html += line('npc-narrator','业绩不好看。你知道这意味着什么——上次裁员名单里，业绩垫底的人一个都没留下来。');
-      html += line('npc-mentor','Mentor（皱着眉）："你这周的稿子……跟领导的要求差距有点大。要不要我帮你过一遍？"');
-    }
-  } else if (G.sanity <= 25) {
-    if (isWeekend(G.day)) {
-      html += line('npc-narrator','休息了一天，但好像没有真的休息到。脑子还是空的，只是换了个地方发呆。');
-      html += line('npc-narrator','已经不记得上次真心喜欢做一个东西是什么时候了。可能是入职前，可能是更早。');
-    } else {
-      html += line('npc-narrator','你发现自己上班时会莫名其妙发呆，对着设计稿脑子里一片空白。');
-      html += line('npc-narrator','已经不记得上次真心喜欢做一个东西是什么时候了。可能是入职前，可能是更早。');
-    }
-  } else if (G.dep >= 70) {
-    if (isWeekend(G.day)) {
-      html += line('npc-narrator','你今天没有拿出那副眼镜，但总觉得少了什么，手边空落落的。');
-      html += line('npc-narrator','你试着随便画了点东西，画了两笔停下来——不知道自己在画什么，也不知道从哪里开始。');
-    } else {
-      html += line('npc-narrator','你意识到，摘下眼镜盯着空白的画布，你不知道从哪里开始了。');
-      html += line('npc-narrator','你试着回想，不戴它的时候你是怎么开始的——想不起来了。');
-      html += line('npc-mentor','Mentor（若有所思）："你最近……好像不戴那个就做不下去了？"');
-    }
-  } else if (isWeekend(G.day)) {
-    const weekendFlavors = [
-      line('npc-narrator','今天不用上班。你睡到九点多才醒，窗帘没拉严，一条光斜在被子上。'),
-      line('npc-narrator','周末的街道比平时安静，楼下有小孩在骑车。你站在阳台上发了一会儿呆，没有特别想做什么。'),
-      line('npc-narrator','你打开手机，第一个看的还是工作群。消息不多，你退出来，把手机翻过去扣在桌上。'),
-      line('npc-narrator','难得的空白时间，你却不知道怎么用。脑子里有根弦好像还绷着，一时松不下来。'),
-      line('npc-narrator','你翻出一本很久没看的书，看了两页，脑子开始飘。最后把书放回去，去厨房倒了杯水。'),
-      line('npc-narrator','外面偶尔有风，天气不错。你没出门，但拉开了窗户，听了一会儿楼下的声音。'),
-      line('npc-narrator','周末下午总有一种奇怪的空——不是无聊，是某种说不清楚的、不知道该怎么填的空白。'),
-    ];
-    html += weekendFlavors[G.day % weekendFlavors.length];
-  } else {
-    const weekdayFlavors = [
-      line('npc-narrator','又是普通的一天。咖啡机还是坏的，空调还是太冷，走廊里贴着的"降本增效"的海报换了新颜色。'),
-      line('npc-colleague','同事（甩过来一份参考图）："这个风格你觉得能做吗？领导那边还在等，上次改了四遍他还不满意。"'),
-      line('npc-narrator','楼道里有人在打电话，声音压得很低。你大概能猜到是什么事，但你没有精力在乎别人的事了。'),
-      line('npc-mentor','Mentor："今天任务量不少，注意时间管理——对了，下周可能有客户突访，做好准备。"') + line('npc-self','你心想，哪个月不是这样。'),
-      line('npc-narrator','你路过领导的工位，他正盯着某个数据表眉头紧锁。你悄悄加快了步伐，假装没看见。'),
-      line('npc-colleague','同事（小声）："哎，听说这季度如果数字再差，年终奖就没了。你觉得是真的吗？"') + line('npc-self','你："……不知道。"'),
-      line('npc-narrator','今天的工作量比想象中多，截止时间比想象中近。你已经不对这件事感到意外了。'),
-    ];
-    html += weekdayFlavors[G.day % weekdayFlavors.length];
-  }
-  return html;
-}
+// buildDayNarrative 已移至 narrative.js
 
 function renderActions() {
   const actions = isWeekend(G.day) ? WEEKEND_ACTIONS : WEEKDAY_ACTIONS;
@@ -1435,40 +1367,7 @@ function advanceDay() {
   updateConfirmBtn();
 }
 
-const ENDINGS = {
-  dep_max: {
-    title:'被时代淘汰', tag:'BAD END', tagClass:'tag-bad', titleColor:'#e74c3c',
-    text:`它是在一条评论里开始的。<br><br>有人把你最近几个月的设计稿截图放在一起，配了一句话：<em>"这个人以前和现在的风格完全不像同一个人在做——因为本来就不是。"</em><br><br>评论区炸开了。有人认出了配色和构图特征，有人翻出你两年前刚入职时发过的作品——那些粗糙但真实的东西，和现在精准但空洞的输出放在一起，沉默比嘲讽更难受。<br><br>公司没有主动开除你，是客户陆续说"不想再合作了"。领导叫你进办公室，把合同放在桌上，说了一句你一辈子都会记得的话：<br><br><em class="npc-leader">"你在这里做了两年，我见过你最好的状态，也见过你后来的样子。最可惜的不是你用了那个东西——是你把自己交出去了，然后你以为没人看见。"</em><br><br>你把那副眼镜放回了口袋，但你发现自己拿起画笔，什么也画不出来了。<br><br><span class="bad-news">不是因为没有才华——是因为你已经忘了自己的才华在哪里了。</span>`,
-  },
-  perf_zero: {
-    title:'被裁了', tag:'BAD END', tagClass:'tag-bad', titleColor:'#e74c3c',
-    text:`HR很客气，给了你缓冲期，还帮你准备了推荐信。<br><br>领导在你离职前找你谈了一次，没有斥责，比你预想的平静。他说：<em>"你不是做不了这份工作。两年前你来的时候我就觉得你有点东西，但后来……你好像越来越不在了。我能分辨。"</em><br><br>你想辩解，但想到那些空白的下午，想到那些对着屏幕发呆的深夜，想到那副眼镜带给你的一次次临时胜利，你什么也没说。<br><br>Mentor在你最后一天请你吃了顿饭，聊了很多有的没的，最后才说：<em class="npc-mentor">"我一直想跟你说：你其实比你想的要能扛。我只是希望你早点告诉我哪里卡住了。"</em><br><br><span class="bad-news">你终于意识到，那副眼镜救不了一个已经不再真正尝试的人。</span>`,
-  },
-  sanity_zero: {
-    title:'撑不住了', tag:'BAD END', tagClass:'tag-bad', titleColor:'#e74c3c',
-    text:`那天下午你坐在工位上，电脑屏幕亮着，你看着那个空白画布，忽然发现自己不知道为什么要坐在这里。<br><br>不是累——是比累更深的东西。这根弦不知道从什么时候开始一直紧着，然后某一天，悄无声息地断了，你甚至没有感觉到疼痛。<br><br>Mentor发现你在茶水间站了很久，问你没事吧。你说没事，然后哭了。<br><br>你请了假。医生说需要休息，建议调整工作节奏。<br><br>那副眼镜一直放在抽屉里，你没有再碰它。<br><br><span class="bad-news">有些东西用工具可以撑住，但用工具撑不住的，是重新喜欢上一件事这件事本身。</span><br><br>你不知道还能不能找回来，但你开始慢慢试了。`,
-  },
-};
-
-function getGoodEnding() {
-  const g = G.glassesUsed, rep = G.rep;
-  if (g === 0) return {
-    title:'平凡，但是我的', tag:'TRUE END', tagClass:'tag-good', titleColor:'#58d68d',
-    text:`三个月结束了，你一次都没有戴那副眼镜。<br><br>这条路走得很难。行业不好做，组里陆陆续续少了几张脸，有几次你差点排进末位名单，有几个深夜你对着那副眼镜发了很久的呆，然后把它收回抽屉里。<br><br>季度考核的会上，领导说了一句话，说的是你："这两年一直在，产出不是最好的，但我知道那都是你自己做的。在这种环境下，这比你想象中稀缺。"<br><br>你当时没太当回事，但后来想起来，那句话很重要。<br><br>Mentor请你喝咖啡，说："说实话，我一直以为你会用那个东西。但你没用。我不知道你是怎么撑过来的。"<br><br>那副眼镜还在口袋里。你不知道它是什么，也不知道那个黑衣人为什么给你，但你知道一件事：<br><br><span class="good-news">你交出去的每一份稿件，都是你自己的。好也好，差也好，都是你站在后面的。</span><br><br>这件事，没有任何工具能替你做到。`,
-  };
-  if (g <= 10 && rep >= 60) return {
-    title:'工具是工具，人是人', tag:'GOOD END', tagClass:'tag-good', titleColor:'#58d68d',
-    text:`三个月里，你偶尔戴过那副眼镜——大概几次，都是在真的撑不住的关键时刻。其他时候，你选择了靠自己的东西。<br><br>季度考核后，领导单独找你谈话，说了一段你记了很久的话："能用工具但没被工具带走，这是我在这个行业里见过的最难做到的一件事。"<br><br>你不确定他说的"工具"指的是眼镜还是别的什么，但你觉得自己听懂了。<br><br>散会后同事小声问你："你那副眼镜……是什么来的？"<br><br>你想了想，摘下来放在他手里："你试试。"<br><br>他戴上，沉默了一会儿，摘下来还给你，说："……有意思。但感觉不像我。"<br><br>你点了点头，<span class="good-news">说："对，就是这个感觉最重要。"</span>`,
-  };
-  if (g <= 25 && rep >= 50) return {
-    title:'普通结局', tag:'NORMAL END', tagClass:'tag-normal', titleColor:'#5dade2',
-    text:`三个月就这样过去了。你用了眼镜，也没用。有几次你觉得很依赖，又刻意收手，但没收得那么干净。<br><br>整体成绩过得去。考核结果出来，你的名字不在末位名单里——在这个时间点，这本身不是一件理所当然的事。Mentor说"有进步"，表情有点复杂。<br><br>你不知道那副眼镜的边界在哪里，也不再确定自己真实的水平是多少了——因为那条线已经模糊了。<br><br>续签了，工资涨了一点点。你站在公司楼下，把眼镜捏在手里看了很久。<br><br>明天要交一个新提案。你不知道今天要不要戴它。<br><br><span style="color:#aaa;">——这个问题，你以后还会面对很多次。</span>`,
-  };
-  return {
-    title:'还好，活下来了', tag:'NORMAL END', tagClass:'tag-normal', titleColor:'#5dade2',
-    text:`三个月，磕磕绊绊地过来了。<br><br>业绩没有特别好，也没有特别坏。那副眼镜你用了不少次，也拒绝了不少次。你还在，这件事本身已经比你想象中来之不易。<br><br>最后一周，领导把所有人叫在一起，念了几个"表现不错"的名字。你的名字不在里面，但你也不在末位那份要"进一步跟进"的名单上。<br><br>你走出公司，口袋里是那副眼镜。<br><br>Mentor追出来说了句"辛苦了"，你说"你也是"，然后各自走向各自的地铁站。<br><br>两年了。<br><br><span style="color:#aaa;">平凡的结局。但你还在这里，明天还要来上班——在这个时代，这本身就是一种答案。</span>`,
-  };
-}
+// ENDINGS 和 getGoodEnding 已移至 endings.js
 
 function showEnding(type) {
   // 隐藏操作区，显示结局
