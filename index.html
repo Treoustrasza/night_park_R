@@ -336,6 +336,76 @@ body {
   border-color: rgba(245,200,66,0.45); color: rgba(245,200,66,0.85); }
 .btn-confirm:disabled { opacity: 0.25; cursor: not-allowed; }
 
+/* ── 事件弹窗蒙版 ── */
+#event-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(4, 6, 16, 0.82);
+  backdrop-filter: blur(2px);
+  align-items: center; justify-content: center;
+}
+#event-overlay.show { display: flex; }
+
+#event-modal {
+  background: #0d1228;
+  border: 1px solid rgba(245,200,66,0.22);
+  border-radius: 4px;
+  width: min(560px, 92vw);
+  max-height: 86vh;
+  overflow-y: auto;
+  padding: 28px 28px 24px;
+  position: relative;
+  font-family: 'Noto Serif SC','SimSun',serif;
+}
+
+#event-modal-tag {
+  font-size: 0.7em; color: rgba(245,200,66,0.55);
+  letter-spacing: 0.18em; margin-bottom: 14px;
+}
+
+#event-modal-title {
+  font-size: 1.05em; color: rgba(245,200,66,0.85);
+  letter-spacing: 0.08em; margin-bottom: 14px;
+}
+
+#event-modal-desc {
+  font-size: 0.88em; color: #b0a890;
+  line-height: 2; margin-bottom: 20px;
+}
+
+#event-modal-choices { display: grid; gap: 8px; margin-bottom: 16px; }
+
+#event-modal-glasses {
+  margin-bottom: 18px;
+}
+
+/* 事件结果区，结算后显示 */
+#event-modal-result {
+  display: none;
+  font-size: 0.88em; color: #c0b8a8;
+  line-height: 2; margin-bottom: 20px;
+  border-top: 1px solid rgba(245,200,66,0.1);
+  padding-top: 16px;
+}
+#event-modal-result.show { display: block; }
+
+#event-modal-confirm {
+  width: 100%; padding: 13px;
+  font-size: 0.88em; border-radius: 2px;
+  background: transparent;
+  color: rgba(245,200,66,0.55);
+  border: 1px solid rgba(245,200,66,0.2);
+  cursor: pointer;
+  font-family: 'Noto Serif SC','SimSun',serif;
+  letter-spacing: 0.15em; transition: all 0.2s;
+}
+#event-modal-confirm:hover:not(:disabled) {
+  background: rgba(245,200,66,0.07);
+  border-color: rgba(245,200,66,0.45);
+  color: rgba(245,200,66,0.85);
+}
+#event-modal-confirm:disabled { opacity: 0.25; cursor: not-allowed; }
+
 /* ── 结局界面 ── */
 #result-screen {
   display: none; text-align: center; padding: 48px 20px;
@@ -490,20 +560,13 @@ body {
     <!-- 叙事框 -->
     <div id="narrative-box" class="g-fade-in"></div>
 
-    <!-- 突发事件区 -->
-    <div id="event-section" class="hidden-g">
-      <h3 id="event-title-h3">── 突发事件</h3>
+    <!-- 突发事件区（旧内联区保留为隐藏占位，弹窗已独立） -->
+    <div id="event-section" class="hidden-g" style="display:none!important;">
+      <h3 id="event-title-h3"></h3>
       <div id="event-desc"></div>
-      <div id="event-choices" class="action-grid"></div>
-      <!-- 事件独立眼镜开关 -->
-      <div class="glasses-toggle-row" id="event-glasses-toggle" onclick="toggleEventGlasses()" style="margin-top:10px;">
-        <span class="glasses-icon">👓</span>
-        <div class="glasses-text">
-          处理这件事时戴上眼镜
-          <small id="event-glasses-hint">会有不同的发挥</small>
-        </div>
-        <div class="toggle-indicator"></div>
-      </div>
+      <div id="event-choices"></div>
+      <div id="event-glasses-toggle"></div>
+      <small id="event-glasses-hint"></small>
     </div>
 
     <!-- 行动区 -->
@@ -539,6 +602,31 @@ body {
 <p style="margin-top:32px;font-size:0.78em;color:rgba(180,170,155,0.45);letter-spacing:0.06em;font-family:'Noto Serif SC','SimSun',serif;">本项目由 戴上这副眼镜的 探机 制作</p>
 </div>
 
+  </div>
+</div>
+
+<!-- 突发事件弹窗 -->
+<div id="event-overlay">
+  <div id="event-modal">
+    <div id="event-modal-tag">── 突发事件 ──</div>
+    <div id="event-modal-title"></div>
+    <div id="event-modal-desc"></div>
+    <div id="event-modal-choices"></div>
+    <!-- 事件眼镜开关 -->
+    <div id="event-modal-glasses">
+      <div class="glasses-toggle-row" id="event-modal-glasses-toggle" onclick="toggleEventGlasses()">
+        <span class="glasses-icon">👓</span>
+        <div class="glasses-text">
+          处理这件事时戴上眼镜
+          <small id="event-glasses-hint">会有不同的发挥</small>
+        </div>
+        <div class="toggle-indicator"></div>
+      </div>
+    </div>
+    <!-- 结算结果 -->
+    <div id="event-modal-result"></div>
+    <!-- 弹窗确认按钮 -->
+    <button id="event-modal-confirm" onclick="confirmEvent()" disabled>确认处理方式 →</button>
   </div>
 </div>
 
@@ -1136,7 +1224,7 @@ function initGameState() {
     glassesUsed: 0, useGlassesToday: false, useGlassForEvent: false,
     studyCount: 0,  // 自学次数
     learnCount: 0,  // 听课次数
-    selectedAction: null, selectedEventChoice: null, currentEvent: null,
+    selectedAction: null, selectedEventChoice: null, currentEvent: null, eventResolved: null,
     eventPool: [...EVENTS],
   };
 }
@@ -1209,11 +1297,10 @@ function selectAction(id) {
 
 function renderEvent(ev) {
   G.currentEvent = ev; G.selectedEventChoice = null;
-  const section = document.getElementById('event-section');
-  section.classList.remove('hidden-g');
-  document.getElementById('event-desc').textContent = ev.desc;
-  document.getElementById('event-title-h3').textContent = `── ${ev.title}`;
-  const container = document.getElementById('event-choices');
+  // 填充弹窗内容
+  document.getElementById('event-modal-title').textContent = ev.title;
+  document.getElementById('event-modal-desc').textContent = ev.desc;
+  const container = document.getElementById('event-modal-choices');
   container.innerHTML = '';
   ev.choices.forEach((c, idx) => {
     const btn = document.createElement('button');
@@ -1222,12 +1309,25 @@ function renderEvent(ev) {
     btn.onclick = () => selectEventChoice(idx);
     container.appendChild(btn);
   });
+  // 重置弹窗内眼镜 toggle 和结果区
+  G.useGlassForEvent = false;
+  const evToggle = document.getElementById('event-modal-glasses-toggle');
+  evToggle.classList.remove('active');
+  document.getElementById('event-glasses-hint').textContent = '会有不同的发挥';
+  const resultEl = document.getElementById('event-modal-result');
+  resultEl.classList.remove('show');
+  resultEl.innerHTML = '';
+  const confirmBtn = document.getElementById('event-modal-confirm');
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = '确认处理方式 →';
+  // 打开弹窗
+  document.getElementById('event-overlay').classList.add('show');
 }
 
 function selectEventChoice(idx) {
   G.selectedEventChoice = idx;
-  document.querySelectorAll('#event-choices .action-btn').forEach(b => b.classList.toggle('selected', +b.dataset.idx === idx));
-  updateConfirmBtn();
+  document.querySelectorAll('#event-modal-choices .action-btn').forEach(b => b.classList.toggle('selected', +b.dataset.idx === idx));
+  document.getElementById('event-modal-confirm').disabled = false;
 }
 
 function toggleGlasses() {
@@ -1241,17 +1341,65 @@ function toggleGlasses() {
 
 function toggleEventGlasses() {
   G.useGlassForEvent = !G.useGlassForEvent;
-  document.getElementById('event-glasses-toggle').classList.toggle('active', G.useGlassForEvent);
+  document.getElementById('event-modal-glasses-toggle').classList.toggle('active', G.useGlassForEvent);
   document.getElementById('event-glasses-hint').textContent = G.useGlassForEvent
-  ? '应该会顺利很多吧'
-  : '会有不同的发挥';
+    ? '应该会顺利很多吧'
+    : '会有不同的发挥';
+  // 若已选了处理方式，确认按钮保持可用
+  if (typeof G.selectedEventChoice === 'number') {
+    document.getElementById('event-modal-confirm').disabled = false;
+  }
+}
+
+function confirmEvent() {
+  const ev = G.currentEvent;
+  const choiceIdx = G.selectedEventChoice;
+  if (!ev || typeof choiceIdx !== 'number') return;
+  const choice = ev.choices[choiceIdx];
+  const useGlass = G.useGlassForEvent;
+
+  const dp = useGlass ? choice.glassPerf  : choice.normalPerf;
+  const ds = useGlass ? choice.glassSanity : choice.normalSanity;
+  const dr = useGlass ? choice.glassRep    : choice.normalRep;
+  const dd = Math.floor((useGlass ? choice.glassDep : choice.normalDep) / 2);
+
+  // 先把结果存到 G，供后面 confirmAction 时不再重复结算
+  G.eventResolved = { dp, ds, dr, dd, useGlass, choiceText: useGlass ? choice.glassText : choice.normalText };
+
+  if (useGlass) G.glassesUsed++;
+
+  // 显示结果文字
+  const resultEl = document.getElementById('event-modal-result');
+  resultEl.innerHTML = line('npc-narrator', G.eventResolved.choiceText)
+    + `<div style="margin-top:10px;font-size:0.8em;color:#666;">${formatDeltas(dp,ds,dr,dd)}</div>`;
+  resultEl.classList.add('show');
+
+  // 隐藏选项和眼镜 toggle，改"确认"为"继续"
+  document.getElementById('event-modal-choices').style.display = 'none';
+  document.getElementById('event-modal-glasses').style.display = 'none';
+  const confirmBtn = document.getElementById('event-modal-confirm');
+  confirmBtn.textContent = '继续处理今天的工作 →';
+  confirmBtn.disabled = false;
+  confirmBtn.onclick = closeEventModal;
+}
+
+function closeEventModal() {
+  const overlay = document.getElementById('event-overlay');
+  overlay.classList.remove('show');
+  // 恢复选项区显示，供下次使用
+  document.getElementById('event-modal-choices').style.display = '';
+  document.getElementById('event-modal-glasses').style.display = '';
+  // 重置确认按钮回调
+  document.getElementById('event-modal-confirm').onclick = () => confirmEvent();
+  // 现在渲染日常叙述和行动
+  setNarrative(buildDayNarrative());
+  renderActions();
   updateConfirmBtn();
 }
 
 function updateConfirmBtn() {
   const btn = document.getElementById('confirm-btn');
-  const needEvent = G.currentEvent !== null;
-  const ready = G.selectedAction !== null && (!needEvent || typeof G.selectedEventChoice === 'number');
+  const ready = G.selectedAction !== null;
   btn.disabled = !ready;
   btn.textContent = ready ? '确认今日行动 →' : '请选择今天的行动';
 }
@@ -1270,26 +1418,17 @@ function confirmAction() {
   const useGlass = G.useGlassesToday;
   let resultHTML = '', dp=0, ds=0, dr=0, dd=0;
 
-  if (G.currentEvent) {
-    const ev = G.currentEvent;
-    const choiceIdx = G.selectedEventChoice; // 现在存的是选项索引
-    const useGlassEvent = G.useGlassForEvent;
-    const choice = ev.choices[choiceIdx];
-    // 按是否戴眼镜取对应数值，dep 减半（事件不持续一整天）
-    const dp_ = useGlassEvent ? choice.glassPerf  : choice.normalPerf;
-    const ds_ = useGlassEvent ? choice.glassSanity : choice.normalSanity;
-    const dr_ = useGlassEvent ? choice.glassRep    : choice.normalRep;
-    const dd_ = Math.floor((useGlassEvent ? choice.glassDep : choice.normalDep) / 2);
-    dp += dp_; ds += ds_; dr += dr_; dd += dd_;
-    if (useGlassEvent) { G.glassesUsed++; }
-    resultHTML += `<div style="color:#f1c40f;font-weight:bold;margin-bottom:6px;">【${ev.title}】</div>`;
-    resultHTML += line('npc-narrator', useGlassEvent ? choice.glassText : choice.normalText);
-    resultHTML += '<br>';
+  // 若当天有已结算的突发事件，合并数值，叙事中展示摘要
+  if (G.eventResolved) {
+    const er = G.eventResolved;
+    dp += er.dp; ds += er.ds; dr += er.dr; dd += er.dd;
+    resultHTML += `<div style="color:#f1c40f;font-size:0.8em;margin-bottom:10px;opacity:0.75;">【突发事件已处理】</div>`;
   }
 
+  // 日常行动结算
   if (useGlass) {
     dp += action.glassPerf; ds += action.glassSanity; dr += action.glassRep; dd += 10;
-    G.glassesUsed++;  // 日常行动用眼镜
+    G.glassesUsed++;
     resultHTML += line('npc-narrator', action.glassText);
   } else {
     dp += action.perf; ds += action.sanity; dr += action.rep;
@@ -1349,19 +1488,25 @@ function advanceDay() {
   G.day++;
   G.useGlassesToday = false; G.useGlassForEvent = false;
   G.selectedAction = null; G.selectedEventChoice = null; G.currentEvent = null;
+  G.eventResolved = null;
   if (G.day > DAYS_TOTAL) { showEnding(); return; }
   document.getElementById('glasses-toggle').classList.remove('active');
   document.getElementById('glasses-hint').textContent = '表现会不一样';
-  const evGlassToggle = document.getElementById('event-glasses-toggle');
-  if (evGlassToggle) { evGlassToggle.classList.remove('active'); }
-  document.getElementById('event-glasses-hint').textContent = '会有不同的发挥';
-  document.getElementById('event-section').classList.add('hidden-g');
   if (!isWeekend(G.day)) {
     G.sanity = clamp(G.sanity - 1, 0, 100);
     if (G.rep < 25) G.perf = clamp(G.perf - 1, 0, 100);
   }
   renderStatusBars();
-  if (!isWeekend(G.day)) { const ev = pickEvent(); if (ev) renderEvent(ev); }
+  // 工作日才触发突发事件
+  if (!isWeekend(G.day)) {
+    const ev = pickEvent();
+    if (ev) {
+      // 有事件：先弹窗处理，关闭后再由 closeEventModal 渲染日常内容
+      renderEvent(ev);
+      return;
+    }
+  }
+  // 无事件：直接渲染日常
   setNarrative(buildDayNarrative());
   renderActions();
   updateConfirmBtn();
