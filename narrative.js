@@ -10,8 +10,8 @@
 
 function narrativeDay1() {
   let h = '';
-  h += line('npc-narrator', '三月的第一天。你在这家公司已经两年了，还坐在一开始的位置上。没有获得过晋升，加薪也只有普调才轮得到你。');
-  h += line('npc-narrator', '上个月刚走了两个人。据说两三个月之后还有一轮季度绩效考核。');
+  h += line('npc-narrator', '四月的第一天。你在这家公司已经两年了，还坐在一开始的位置上。没有获得过晋升，加薪也只有普调才轮得到你。');
+  h += line('npc-narrator', '上个月刚走了两个人。据说两个月之后还有一轮HC盘点。');
   h += line('npc-narrator', '你把那副眼镜放在胸前的口袋里，打开电脑，登上钉钉，假装什么都没发生过。');
   h += line('npc-mentor', 'Mentor刚好路过你工位，留意到你心不在焉的样子，把保温杯顺手搁在桌上，压低声音：“一会大老板要过来开会，稍微注意一点哦。”');
   return h;
@@ -37,9 +37,9 @@ function narrativeDay30() {
   return h;
 }
 
-function narrativeDay60() {
+function narrativeDay50() {
   let h = '';
-  h += line('npc-narrator', '两个月了。公司官网悄悄撤掉了招聘页面，大家心里都明白是什么意思。');
+  h += line('npc-narrator', '公司官网悄悄撤掉了招聘页面，大家心里都明白是什么意思。');
   h += line('npc-mentor', 'Mentor依然慢腾腾地泡着茶：“最近感觉怎么样？”');
   h += line('npc-self', '“嗯……还可以吧。”你想说你很累，和新协同方的对接总是不顺利，行业整体转型太快了你跟不上，你很焦虑。但最终你没有说，这不是应该对Mentor讲的内容。');
   h += line('npc-narrator', 'Mentor把茶叶拨了拨，没再追问。“咱们小组的业绩不太好啊……你最近也在外面看看吧，我听到了一些不太好的风声，但具体的我不能说。”他发出轻飘飘的叹气声。');
@@ -153,8 +153,8 @@ function buildDayNarrative() {
     html += narrativeDay5();
   } else if (G.day === 30) {
     html += narrativeDay30();
-  } else if (G.day === 60) {
-    html += narrativeDay60();
+  } else if (G.day === 50) {
+    html += narrativeDay50();
   } else if (G.perf <= 25) {
     html += isWeekend(G.day) ? narrativeLowPerfWeekend() : narrativeLowPerfWeekday();
   } else if (G.sanity <= 25) {
