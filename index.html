@@ -914,10 +914,6 @@ function startGlassesExperience() {
           typeText(
           [
             '世界没有发生任何戏剧性的变化。',
-            '{PAUSE:500}',
-            '公园还是那个公园，路灯还是那盏路灯，',
-            '{PAUSE:400}',
-            '风还是从左边吹过来的。',
             '{PAUSE:1000}',
             '',
             '但你忽然意识到——',
@@ -940,7 +936,7 @@ function startGlassesExperience() {
                 '如果是现在的话，说不定……',
                 '{PAUSE:1000}',
                 '',
-                '那种感觉……',
+                '这种感觉……',
               ],
               () => {
                 showChoices([
@@ -1174,43 +1170,43 @@ const DAYS_TOTAL = 90;
 const WEEKDAY_ACTIONS = [
   { id:'wk_normal', label:'正常完成任务', effect:'完成日常设计工作，勉勉强强，但没什么亮点。',
     perf:+2, sanity:-1, rep:-1, glassPerf:+8, glassSanity:0, glassRep:+2,
-    normalText:'你打开PS，对着参考图挤出方案，一如既往。领导没夸也没批，工资照发。你盯着屏幕发了一会儿呆，然后把窗口最小化，去倒了杯水。',
-    glassText:'眼镜的加持让思路异常清晰，配色一气呵成，连你自己都觉得惊艳。同事走过来问了句"这个用了什么参考"，你说"没什么，随手做的"，然后把眼镜往鼻梁上推了推。' },
+    normalText:'你打开PS，对着参考图拼拼凑凑地挤出方案交差，一如既往，至少你的产出对得起薪资。你盯着屏幕发了一会儿呆，然后把窗口最小化，去倒了杯水。',
+    glassText:'眼镜的加持让思路异常清晰。你的成品质量完全超出了一般水准，哦，不能这样说，怎么能把你和那些平庸的人对比呢。你想着，把眼镜往鼻梁上推了推。' },
   { id:'wk_overtime', label:'主动加班', effect:'提交额外工作量，业绩提升但心态受损。',
     perf:+5, sanity:-5, rep:+1, glassPerf:+12, glassSanity:-2, glassRep:+3,
     normalText:'你又一次是最后一个关电脑的人。楼下便利店的收银员已经认识你，会主动帮你加热包子。你有时候觉得，你和他聊的话，比跟很多同事都多。',
-    glassText:'戴着眼镜加班效率翻倍，一晚上的产出足以在周会上撑起你的数字。但地铁末班车上，你盯着黑色玻璃里自己的脸发了很久的呆——那副眼镜摘了，你感觉自己少了点什么。' },
-{ id:'wk_study', label:'在完成工作的基础上花时间自学', effect:'提升真实能力，短期业绩无变化但声誉慢慢积累。',
+    glassText:'戴着眼镜加班效率翻倍，一晚上的产出足以在周会上撑起你的数字。地铁末班车上，你盯着玻璃反光里自己的脸。冷冰冰的表情，紧抿着的薄唇，和平时的你好像不太一样。' },
+{ id:'wk_study', label:'在完成工作的基础上花时间自学', effect:'提升能力，短期业绩无变化。',
 perf:-1, sanity:-2, rep:0, glassPerf:+2, glassSanity:-2, glassRep:0,
-    normalText:'午休时间刷了一套新教程，做了点笔记。不知道什么时候能用上，但总比什么都不做好。你合上笔记本，重新打开工作文件。',
-    glassText:'戴着眼镜学习，概念消化飞快，笔记记了满满几页。但摘下来翻看，总感觉那些字是别人写的。' },
+    normalText:'午休时间刷了一节网课，好像得到了一点启发。同事路过时投来讶异的眼光。你合上笔记本，重新打开工作文件。',
+    glassText:'即使2倍速上课也觉得信息密度太低了。老师讲的东西实在过分简单，你不禁开始怀疑，就这种程度的课也值得花时间去听吗？' },
   { id:'wk_low', label:'摸鱼低调过一天', effect:'保存心态，但业绩下滑。',
     perf:-3, sanity:+4, rep:-2, glassPerf:+3, glassSanity:+4, glassRep:0,
-    normalText:'你假装在改稿，实际上刷了两小时短视频。心情好多了，活没干完。截止日还有两天，先这样吧。',
-    glassText:'眼镜让你在摸鱼之余顺手把几个遗留问题处理了，领导那边也看不出你实际上今天没怎么用力。完美掩护。但你总觉得这样用……有点对不起它，也对不起自己。' },
+    normalText:'你假装在改稿，实际上分屏刷同人产出，心情好多了。活没干完，不过ddl还有两天，先这样吧。',
+    glassText:'你在摸鱼之余顺手把几个遗留问题处理了，领导那边也什么都没发现。当然了，以你的能力，这是理所当然的。' },
 ];
 
 const WEEKEND_ACTIONS = [
   { id:'we_rest', label:'在家休息', effect:'彻底放空，心态大幅恢复。',
     perf:0, sanity:+10, rep:0, glassPerf:0, glassSanity:+10, glassRep:0,
-    normalText:'睡到自然醒，点了外卖，看了一部搁置很久的电影。手机消息静音，一条都没回。这种时间越来越少，就越来越值得认真对待。',
-    glassText:'你把眼镜放到抽屉里，休息了一整天。快睡着的时候脑子冒出一个念头，然后你把它压下去，继续睡。' },
+    normalText:'睡到自然醒，点了外卖，看了一部想看很久的老电影。手机消息静音，有一大堆提醒，但你一条都没回。这种时间越来越少，让你愈发觉得宝贵。',
+    glassText:'你在期待什么呢？更好的休息吗？似乎唯独在这件事上，这副眼镜并不能帮上你的忙。不，它反倒让你想得更多。' },
   { id:'we_overtime', label:'周末加班', effect:'业绩大幅提升，心态受损，声誉微增。',
     perf:+8, sanity:-8, rep:+2, glassPerf:+18, glassSanity:-4, glassRep:+5,
-    normalText:'周末还是来公司了。你跟保安大叔相视一笑，已经不需要说话了。空旷的办公室，只有空调的声音，没人来找你，一整天。',
-    glassText:'戴着眼镜整个周末高效产出，周一领导一上班就在群里发来了赞。但你盯着那条消息很久，想到的第一件事是：下次没戴眼镜，我还能交出这个水准的东西吗？' },
+    normalText:'周末还是来公司了。你跟保安大叔相视一笑。空旷的办公室，只有空调的声音，没人来找你，一整天。',
+    glassText:'高效产出，顺便发了精装朋友圈暗示自己的努力。看着领导的点赞提醒，你微笑起来。向上管理也是工作的一部分，但迟早有一天，你会把那些人踩在脚底下。' },
   { id:'we_hobby', label:'做自己的设计', effect:'心态好，声誉小幅提升，磨练真实技艺。',
     perf:0, sanity:+6, rep:+4, glassPerf:0, glassSanity:+6, glassRep:+2,
-    normalText:'你打开了那个搁置了一年半的私人项目。没有甲方，没有需求文档，没有截止日期，也没有领导的眼神。你做了一些很小的、很自己的东西。做完之后感觉人还在。',
-    glassText:'戴着眼镜做自己的东西，出来的成品精准漂亮，比你平时强太多。但你看着屏幕，有点说不清楚的失落——这个，是你的风格吗？还是眼镜的？你分不清了。' },
+    normalText:'你打开了那个搁置了很久的私人项目。没有甲方，没有需求文档，没有ddl，也没有领导的审视和批评。你做了一些简陋的饺子醋，由于过度投入身体前倾，放松下来时感觉肩膀有点发紧。',
+    glassText:'你轻松地解决了过去卡住很久的问题，甚至推翻重写了一大块内容。成品精美漂亮，简直有商业化的水准。你随手推到网上，很快就吸引了不少关注，这一切都那么让人飘飘然。' },
   { id:'we_social', label:'出去和朋友玩', effect:'心态大幅提升，短暂脱离职场。',
     perf:0, sanity:+12, rep:0, glassPerf:0, glassSanity:+12, glassRep:0,
-    normalText:'朋友说你最近看起来很累，你笑笑说"还行"。吃了顿火锅，他们聊了很多和工作无关的事，你发现你已经不太记得怎么说这些了——但今晚还是找回来了一点点。',
-    glassText:'你没戴眼镜出门。久违地当了几个小时的普通人，不需要表现，不需要输出。朋友问你最近公司怎么样，你说"还行"，然后把话题转开了。' },
+    normalText:'朋友说你最近看起来很累，你笑笑说“还行”，接着僵硬地转移了话题。这座熟悉的城市在白天的风景让你感到新鲜，火锅很好吃，你们聊了很多和工作无关的事。',
+    glassText:'和平时不同，今天的你简直成为了圈子的中心。看着朋友们惊讶乃至敬佩的眼神，感到自己能够轻易操纵他们的思想和行为，你偏过头去，无声地笑了。' },
   { id:'we_learn', label:'听课学习', effect:'声誉和能力长期积累，耗费精力。',
     perf:0, sanity:-4, rep:0, glassPerf:0, glassSanity:-4, glassRep:0,
-    normalText:'培训班的老师讲得不错，你认真做了笔记。身边同学的眼神都有点像你——各有各的难处，各有各的盘算。大家一起低头抄，谁都没多问。这笔钱花得值。',
-    glassText:'眼镜让你消化课程内容轻而易举，课上的表现比旁边的人都好。但课后和同学一起讨论的时候，你摘下眼镜，发现自己其实什么都没真正内化——只是暂时理解了而已。' },
+    normalText:'培训班的老师讲得不错，你认真做了笔记。身边同学的年龄职业各异，但都显得有些疲惫。你们怀抱着对更美好生活的期待，一同付出了自己的休息时间。',
+    glassText:'你消化课程内容轻而易举，课上的表现比旁边的人都好。老师多少有些太迁就那些理解能力差的同学了，一个知识点反复讲很多遍，简直是浪费你的时间。你对此感到忿忿不平。' },
 ];
 
 // EVENTS 数组已移至 events.js
@@ -1298,7 +1294,7 @@ function selectAction(id) {
 function renderEvent(ev) {
   G.currentEvent = ev; G.selectedEventChoice = null;
   // 填充弹窗内容
-  document.getElementById('event-modal-title').textContent = ev.title;
+  document.getElementById('event-modal-title').textContent = '';
   document.getElementById('event-modal-desc').textContent = ev.desc;
   const container = document.getElementById('event-modal-choices');
   container.innerHTML = '';
@@ -1370,8 +1366,7 @@ function confirmEvent() {
 
   // 显示结果文字
   const resultEl = document.getElementById('event-modal-result');
-  resultEl.innerHTML = line('npc-narrator', G.eventResolved.choiceText)
-    + `<div style="margin-top:10px;font-size:0.8em;color:#666;">${formatDeltas(dp,ds,dr,dd)}</div>`;
+  resultEl.innerHTML = line('npc-narrator', G.eventResolved.choiceText);
   resultEl.classList.add('show');
 
   // 隐藏选项和眼镜 toggle，改"确认"为"继续"
